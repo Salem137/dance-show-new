@@ -1,0 +1,186 @@
+{
+  "header": {
+    "title": "SQUID GAME SHOW",
+    "subtitle": "لوحة تحكم الإدارة"
+  },
+  "status": {
+    "waiting": "بانتظار البدء",
+    "active": "نشط",
+    "voting": "تصويت",
+    "video": "فيديو",
+    "ended": "انتهى",
+    "idle": "بانتظار",
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "reconnecting": "إعادة الاتصال...",
+    "reconnectFailed": "فشل إعادة الاتصال"
+  },
+  "controls": {
+    "startShow": "بدء العرض",
+    "nextScene": "المشهد التالي",
+    "previousScene": "السابق",
+    "pause": "إيقاف مؤقت",
+    "resume": "استئناف",
+    "skip": "تخطي",
+    "editShow": "تعديل العرض",
+    "resetShow": "إعادة تعيين",
+    "logout": "خروج",
+    "notStarted": "لم يبدأ"
+  },
+  "scene": {
+    "currentScene": "المشهد الحالي",
+    "nextScene": "المشهد التالي",
+    "noActive": "لا يوجد مشهد نشط",
+    "noNext": "لا يوجد مشهد تالي",
+    "sceneNumber": "مشهد {current} من {total}",
+    "sceneOf": "مشهد {current} من {total}",
+    "intro": "مقدمة",
+    "linear": "خطي",
+    "branching": "تصويت",
+    "outro": "ختام"
+  },
+  "votes": {
+    "title": "التصويت المباشر",
+    "total": "إجمالي الأصوات",
+    "noVotes": "لا توجد أصوات بعد",
+    "vote": "صوت",
+    "votes": "أصوات"
+  },
+  "override": {
+    "title": "تجاوز يدوي",
+    "hint": "تجاوز نتيجة التصويت إذا لزم الأمر",
+    "enable": "ابدأ العرض للتفعيل",
+    "success": "تجاوز يدوي:"
+  },
+  "history": {
+    "title": "سجل المشاهد",
+    "empty": "لا توجد مشاهد مكتملة بعد",
+    "na": "غير متوفر",
+    "manual": " (يدوي)"
+  },
+  "analytics": {
+    "title": "SQUID GAME ANALYTICS",
+    "voters": "الناخبون الفريدون",
+    "totalVotes": "إجمالي الأصوات",
+    "scenesCompleted": "المشاهد المكتملة",
+    "avgVoteTime": "متوسط وقت التصويت",
+    "sceneResults": "نتائج المشاهد",
+    "choicePopularity": "شعبية الخيارات",
+    "showHistory": "سجل العروض",
+    "noData": "لا توجد بيانات بعد. ابدأ عرضاً لرؤية التحليلات.",
+    "noVotingData": "لا توجد بيانات تصويت بعد.",
+    "noHistory": "لا يوجد سجل بعد.",
+    "manual": "يدوي",
+    "tie": "تعادل",
+    "random": "عشوائي",
+    "voted": "صوّت",
+    "winner": "الفائز:",
+    "occurrences": "مرة",
+    "votes": "أصوات",
+    "backToAdmin": "العودة للإدارة",
+    "totalVoters": "إجمالي الناخبين"
+  },
+  "connection": {
+    "admin": "الإدارة",
+    "voters": "الناخبون",
+    "stage": "المسرح",
+    "votersCount": "ناخب",
+    "adminsCount": "إدارة",
+    "stagesCount": "مسرح"
+  },
+  "shortcuts": {
+    "title": "اختصارات لوحة المفاتيح",
+    "startNext": "بدء / المشهد التالي",
+    "previous": "المشهد السابق",
+    "pauseVideo": "إيقاف الفيديو مؤقتاً",
+    "resumeVideo": "استئناف الفيديو",
+    "skipVideo": "تخطي الفيديو",
+    "qrCode": "رمز QR",
+    "fullscreen": "ملء الشاشة",
+    "togglePreview": "تبديل المعاينة",
+    "toggleShortcuts": "تبديل الاختصارات"
+  },
+  "qr": {
+    "title": "رمز QR",
+    "generate": "تحديث",
+    "generating": "جاري الإنشاء...",
+    "notFound": "صورة QR غير موجودة",
+    "loadError": "فشل تحميل الصورة",
+    "error": "خطأ:"
+  },
+  "diagnostics": {
+    "title": "التشخيص",
+    "run": "تشغيل الفحص",
+    "running": "جاري التشخيص...",
+    "server": "الخادم",
+    "running": "يعمل",
+    "socketio": "Socket.IO",
+    "ok": "جيد",
+    "found": "موجود",
+    "missing": "غير موجود",
+    "failed": "فشل التشخيص"
+  },
+  "stage": {
+    "title": "رابط المسرح",
+    "hint": "افتح هذا على جهاز العرض المتصل بالشاشة",
+    "open": "فتح عرض المسرح"
+  },
+  "reset": {
+    "title": "إعادة تعيين العرض",
+    "confirm": "هل أنت متأكد من إعادة تعيين العرض؟ سيتوقف كل شيء وتجتمع جميع الأصوات."
+  },
+  "preview": {
+    "stagePreview": "معاينة المسرح",
+    "resize": "تغيير الحجم",
+    "minimize": "تصغير",
+    "close": "إغلاق",
+    "stage": "📺 المسرح"
+  },
+  "timer": {
+    "votingTime": "وقت التصويت"
+  },
+  "toast": {
+    "showStarted": "بدأ العرض!",
+    "showEnded": "انتهى العرض!",
+    "showReset": "تم إعادة تعيين العرض",
+    "sceneAdvanced": "تم الانتقال للمشهد التالي",
+    "sceneBack": "تم الرجوع للمشهد السابق",
+    "firstScene": "أنت في المشهد الأول",
+    "videoPaused": "تم إيقاف الفيديو مؤقتاً",
+    "videoResumed": "تم استئناف الفيديو",
+    "videoSkipped": "تم تخطي الفيديو",
+    "fullscreen": "ملء الشاشة غير مدعوم",
+    "winner": "الفائز:",
+    "unknown": "غير معروف",
+    "connected": "تم إعادة الاتصال!",
+    "connectionLost": "فقد الاتصال. جاري إعادة الاتصال...",
+    "reconnecting": "جاري إعادة الاتصال...",
+    "failedStart": "فشل بدء العرض",
+    "failedBack": "فشل الرجوع",
+    "failedAdvance": "فشل الانتقال",
+    "failedPause": "فشل إيقاف الفيديو",
+    "failedResume": "فشل استئناف الفيديو",
+    "failedSkip": "فشل تخطي الفيديو",
+    "failedOverride": "فشل التجاوز",
+    "failedReset": "فشل إعادة التعيين",
+    "qrGenerated": "تم إنشاء رمز QR",
+    "qrNotFound": "صورة QR غير موجودة في الاستجابة",
+    "qrFailed": "فشل إنشاء رمز QR",
+    "diagComplete": "اكتمل التشخيص",
+    "diagFailed": "فشل التشخيص"
+  },
+  "confirm": {
+    "title": "تأكيد",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد"
+  },
+  "login": {
+    "subtitle": "أدخل كلمة المرور للوصول للتحكم في اللعبة",
+    "password": "كلمة المرور",
+    "placeholder": "أدخل كلمة مرور الإدارة",
+    "login": "دخول",
+    "loggingIn": "جاري الدخول...",
+    "invalid": "كلمة مرور خاطئة",
+    "connectionError": "خطأ في الاتصال"
+  }
+}

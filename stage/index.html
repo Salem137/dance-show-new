@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">Squid Game Show - Stage View</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Squid Game Shapes Background -->
+  <div class="shapes-container">
+    <div class="squid-shape shape-triangle">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,10 10,90 90,90" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-square">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="15" y="15" width="70" height="70" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-circle-shape">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-small-1">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,10 10,90 90,90" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-small-2">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="15" y="15" width="70" height="70" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-small-3">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Status Bar -->
+  <div class="status-bar" id="status-bar">
+    <div class="status-item status-prize">
+      <span class="status-icon">💰</span>
+      <span class="status-value" id="status-prize">$0</span>
+      <span class="status-label">PRIZE</span>
+    </div>
+    <div class="status-item status-safe">
+      <span class="status-icon">🛡️</span>
+      <span class="status-value" id="status-safe">0</span>
+      <span class="status-label">SAFE</span>
+    </div>
+    <div class="status-item status-detained">
+      <span class="status-icon">🔒</span>
+      <span class="status-value" id="status-detained">0</span>
+      <span class="status-label">DETAINED</span>
+    </div>
+    <div class="status-item status-killed">
+      <span class="status-icon">💀</span>
+      <span class="status-value" id="status-killed">0</span>
+      <span class="status-label">KILLED</span>
+    </div>
+  </div>
+
+  <div id="idle-screen" class="screen active">
+    <div class="idle-content">
+      <div class="idle-dot"></div>
+      <div class="idle-title" data-i18n="startingSoon">Game Starting Soon...</div>
+    </div>
+  </div>
+
+  <div id="video-screen" class="screen">
+    <video id="stage-video"></video>
+    <div id="video-overlay" class="video-overlay"></div>
+    <div class="audience-badge" id="audience-badge">
+      <span class="audience-icon">👥</span>
+      <span class="audience-count" id="stage-audience-count">0</span>
+      <span class="audience-label" data-i18n="connected">connected</span>
+    </div>
+  </div>
+
+  <div id="choices-screen" class="screen">
+    <div class="audience-badge" id="audience-badge-choices">
+      <span class="audience-icon">👥</span>
+      <span class="audience-count" id="stage-audience-count-choices">0</span>
+      <span class="audience-label" data-i18n="connected">connected</span>
+    </div>
+    <div class="choices-header">
+      <div class="vote-instruction" id="vote-instruction" data-i18n="openPhone">OPEN YOUR PHONE AND START VOTE</div>
+      <div class="timer-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="timer-bg" cx="50" cy="50" r="44"/>
+          <circle class="timer-progress" cx="50" cy="50" r="44" id="stage-timer-ring"/>
+        </svg>
+        <span class="timer-text" id="stage-timer-text">30</span>
+      </div>
+    </div>
+    <div class="vote-count-total" id="vote-count-total">0 voters</div>
+    <div class="choices-container" id="choices-dynamic"></div>
+  </div>
+
+  <!-- Battle Screen -->
+  <div id="battle-screen" class="screen">
+    <div class="audience-badge">
+      <span class="audience-icon">👥</span>
+      <span class="audience-count" id="stage-audience-count-battle">0</span>
+      <span class="audience-label" data-i18n="connected">connected</span>
+    </div>
+    <div class="choices-header">
+      <div class="vote-instruction battle-instruction">BATTLE TIME - VOTE YES OR NO</div>
+      <div class="battle-info" id="battle-info">Battle 1/5 - SOLO</div>
+      <div class="timer-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="timer-bg" cx="50" cy="50" r="44"/>
+          <circle class="timer-progress" cx="50" cy="50" r="44" id="stage-timer-ring-battle"/>
+        </svg>
+        <span class="timer-text" id="stage-timer-text-battle">30</span>
+      </div>
+    </div>
+    <div class="vote-count-total" id="vote-count-total-battle">0 voters</div>
+    <div class="choices-container battle-choices">
+      <div class="choice-box choice-yes" id="battle-yes">
+        <div class="choice-inner">
+          <div class="choice-symbol">✓</div>
+          <div class="choice-label">YES</div>
+          <div class="choice-votes" id="battle-votes-yes">0</div>
+          <div class="choice-bar"><div class="choice-bar-fill" id="battle-bar-yes"></div></div>
+        </div>
+      </div>
+      <div class="choice-divider">VS</div>
+      <div class="choice-box choice-no" id="battle-no">
+        <div class="choice-inner">
+          <div class="choice-symbol">✗</div>
+          <div class="choice-label">NO</div>
+          <div class="choice-votes" id="battle-votes-no">0</div>
+          <div class="choice-bar"><div class="choice-bar-fill" id="battle-bar-no"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shadow Game Screen -->
+  <div id="shadow-screen" class="screen">
+    <div class="shadow-content">
+      <div class="shadow-icon">🌑</div>
+      <div class="shadow-phase" id="shadow-phase">HIDING PHASE</div>
+      <div class="shadow-timer-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="timer-bg" cx="50" cy="50" r="44"/>
+          <circle class="timer-progress shadow-progress" cx="50" cy="50" r="44" id="shadow-timer-ring"/>
+        </svg>
+        <span class="timer-text shadow-text" id="shadow-total-timer">3:00</span>
+      </div>
+      <div class="shadow-instruction">DO NOT MOVE IN THE LIGHT</div>
+    </div>
+  </div>
+
+  <!-- Category Voting Screen -->
+  <div id="category-screen" class="screen">
+    <div class="audience-badge">
+      <span class="audience-icon">👥</span>
+      <span class="audience-count" id="stage-audience-count-cat">0</span>
+      <span class="audience-label" data-i18n="connected">connected</span>
+    </div>
+    <div class="choices-header">
+      <div class="vote-instruction">CHOOSE A CATEGORY TO RESCUE</div>
+      <div class="timer-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="timer-bg" cx="50" cy="50" r="44"/>
+          <circle class="timer-progress" cx="50" cy="50" r="44" id="cat-timer-ring"/>
+        </svg>
+        <span class="timer-text" id="cat-timer-text">20</span>
+      </div>
+    </div>
+    <div class="vote-count-total" id="cat-vote-count-total">0 voters</div>
+    <div class="choices-container" id="category-options"></div>
+  </div>
+
+  <div id="ended-screen" class="screen">
+    <div class="ended-content">
+      <div class="ended-dot"></div>
+      <div class="ended-title" data-i18n="thankYou">THANK YOU!</div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    function createParticles() {
+      const container = document.getElementById('particles');
+      if (!container) return;
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (15 + Math.random() * 25) + 's';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.width = (3 + Math.random() * 5) + 'px';
+        particle.style.height = particle.style.width;
+        container.appendChild(particle);
+      }
+    }
+    createParticles();
+  </script>
+  <script>
+    let currentLang = localStorage.getItem('admin-lang') || 'en';
+    let stageTranslations = {};
+
+    async function loadStageTranslations() {
+      try {
+        const res = await fetch(`/stage/lang/${currentLang}.json`);
+        stageTranslations = await res.json();
+        applyStageTranslations();
+      } catch (err) {
+        console.error('Failed to load stage translations:', err);
+      }
+    }
+
+    function t(key) {
+      const keys = key.split('.');
+      let value = stageTranslations;
+      for (const k of keys) {
+        value = value?.[k];
+      }
+      return value || key;
+    }
+
+    function applyStageTranslations() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = t(key);
+        if (val) el.textContent = val;
+      });
+    }
+
+    loadStageTranslations();
+  </script>
+  <script src="stage.js"></script>
+</body>
+</html>

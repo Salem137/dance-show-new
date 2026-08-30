@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title data-i18n="title">Squid Game Show - Vote Now</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Language Toggle Button -->
+  <button class="lang-toggle" id="lang-toggle" title="Toggle Language">
+    <span id="lang-label">EN</span>
+  </button>
+
+  <!-- Squid Game Shapes Background -->
+  <div class="shapes-container">
+    <div class="squid-shape shape-triangle">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,10 10,90 90,90" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-square">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="15" y="15" width="70" height="70" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-circle">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-small-1">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,10 10,90 90,90" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-small-2">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="15" y="15" width="70" height="70" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="squid-shape shape-small-3">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+
+  <div id="app">
+    <!-- Waiting Screen -->
+    <div id="waiting-screen" class="screen active">
+      <div class="logo-container">
+        <div class="logo-glow"></div>
+        <div class="logo-shape logo-triangle">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,15 15,85 85,85" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="logo-shape logo-square">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="60" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="logo-shape logo-circle">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="35" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+      <h1 id="show-title" data-i18n="showName">Squid Game Show</h1>
+      <p class="subtitle" data-i18n="welcome">Welcome to the Squid Game experience</p>
+      <div class="spinner"></div>
+      <p class="status" id="waiting-status" data-i18n="waiting">Waiting for the show to begin...</p>
+      <div class="connection-status" id="connection-status">
+        <span class="dot"></span> <span data-i18n="connected">Connected</span>
+      </div>
+    </div>
+
+    <!-- Voting Screen (Branching) -->
+    <div id="voting-screen" class="screen">
+      <div class="scene-header">
+        <h2 id="scene-title" data-i18n="sceneTitle">Scene Title</h2>
+        <p id="scene-description" data-i18n="description">Description</p>
+      </div>
+
+      <div class="timer-container">
+        <div class="timer-ring">
+          <svg viewBox="0 0 100 100">
+            <circle class="timer-bg" cx="50" cy="50" r="45"/>
+            <circle class="timer-progress" id="timer-circle" cx="50" cy="50" r="45"/>
+          </svg>
+          <span class="timer-text" id="timer-text">15</span>
+        </div>
+        <p class="timer-label" data-i18n="secondsLeft">seconds left</p>
+      </div>
+
+      <div id="choices-container" class="choices"></div>
+
+      <div class="vote-count">
+        <span id="total-votes">0</span> <span data-i18n="votesCast">votes cast</span>
+      </div>
+    </div>
+
+    <!-- Accumulative Voting Screen (Battle Yes/No) -->
+    <div id="accumulative-screen" class="screen">
+      <div class="scene-header">
+        <h2 id="accum-title">Dance Battle</h2>
+        <p id="accum-description" class="battle-info-sub" id="accum-battle-info">Battle 1/5 — SOLO</p>
+      </div>
+
+      <div class="timer-container">
+        <div class="timer-ring">
+          <svg viewBox="0 0 100 100">
+            <circle class="timer-bg" cx="50" cy="50" r="45"/>
+            <circle class="timer-progress" id="accum-timer-circle" cx="50" cy="50" r="45"/>
+          </svg>
+          <span class="timer-text" id="accum-timer-text">15</span>
+        </div>
+        <p class="timer-label">seconds left</p>
+      </div>
+
+      <div id="accum-choices-container" class="choices accum-choices">
+        <button class="choice-btn accum-yes" id="accum-yes-btn" onclick="castAccumVote('yes')">
+          <div class="bar" style="background: #26A69A"></div>
+          <span class="label">△ YES</span>
+          <span class="vote-count-badge" id="accum-yes-count">0</span>
+        </button>
+        <button class="choice-btn accum-no" id="accum-no-btn" onclick="castAccumVote('no')">
+          <div class="bar" style="background: #E91E63"></div>
+          <span class="label">◯ NO</span>
+          <span class="vote-count-badge" id="accum-no-count">0</span>
+        </button>
+      </div>
+
+      <div class="vote-count">
+        <span id="accum-total-votes">0</span> <span>votes cast</span>
+      </div>
+    </div>
+
+    <!-- Category Voting Screen -->
+    <div id="category-screen" class="screen">
+      <div class="scene-header">
+        <h2 id="cat-title">Second Chance</h2>
+        <p id="cat-description">Choose a category to rescue</p>
+      </div>
+
+      <div class="timer-container">
+        <div class="timer-ring">
+          <svg viewBox="0 0 100 100">
+            <circle class="timer-bg" cx="50" cy="50" r="45"/>
+            <circle class="timer-progress" id="cat-timer-circle" cx="50" cy="50" r="45"/>
+          </svg>
+          <span class="timer-text" id="cat-timer-text">20</span>
+        </div>
+        <p class="timer-label">seconds left</p>
+      </div>
+
+      <div id="cat-choices-container" class="choices"></div>
+
+      <div class="vote-count">
+        <span id="cat-total-votes">0</span> <span>votes cast</span>
+      </div>
+    </div>
+
+    <!-- Confirmed Screen -->
+    <div id="confirmed-screen" class="screen">
+      <div class="checkmark">✓</div>
+      <h2 data-i18n="voteRecorded">Vote Recorded!</h2>
+      <p id="confirmed-choice"><span data-i18n="youChose">You chose:</span> <strong></strong></p>
+      <p class="wait-message" data-i18n="watchStage">Watch the stage...</p>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="screen">
+      <div class="result-badge" data-i18n="audienceChose">AUDIENCE CHOSE</div>
+      <h1 id="result-label">Choice Label</h1>
+      <div id="result-color" class="result-color-bar"></div>
+      <div id="result-votes" class="result-votes"></div>
+      <div id="user-choice-result" class="user-choice-result"></div>
+      <p class="result-countdown"><span data-i18n="videoPlayingIn">Video playing in</span> <span id="countdown-text">5</span>s...</p>
+    </div>
+
+    <!-- Ended Screen -->
+    <div id="ended-screen" class="screen">
+      <div class="logo-container">
+        <div class="logo-glow"></div>
+        <div class="logo-shape logo-triangle">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,15 15,85 85,85" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="logo-shape logo-square">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="60" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="logo-shape logo-circle">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="35" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+      <h1 data-i18n="thankYou">Thank You!</h1>
+      <p class="subtitle" data-i18n="performanceEnded">The performance has ended</p>
+      <p class="wait-message" data-i18n="enjoyedExperience">We hope you enjoyed the experience</p>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar" id="status-bar">
+    <div class="sb-item">
+      <span class="sb-icon">💰</span>
+      <span class="sb-val" id="sb-prize">$0</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-icon">🛡️</span>
+      <span class="sb-val" id="sb-safe">0</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-icon">🔒</span>
+      <span class="sb-val" id="sb-detained">0</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-icon">💀</span>
+      <span class="sb-val" id="sb-killed">0</span>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let currentLang = localStorage.getItem('client-lang') || localStorage.getItem('lang') || 'en';
+    let clientTranslations = {};
+
+    async function loadClientTranslations(lang) {
+      try {
+        const res = await fetch(`/client/lang/${lang}.json`);
+        clientTranslations = await res.json();
+        applyClientTranslations();
+        const langLabel = document.getElementById('lang-label');
+        langLabel.textContent = lang === 'en' ? 'EN' : 'AR';
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = lang;
+        localStorage.setItem('client-lang', lang);
+        if (typeof refreshAllText === 'function') refreshAllText();
+      } catch (err) {
+        console.error('Failed to load client translations:', err);
+      }
+    }
+
+    function t(key) {
+      const keys = key.split('.');
+      let value = clientTranslations;
+      for (const k of keys) { value = value?.[k]; }
+      return value || key;
+    }
+
+    function applyClientTranslations() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = t(key);
+        if (val) el.textContent = val;
+      });
+    }
+
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      loadClientTranslations(currentLang);
+    });
+
+    loadClientTranslations(currentLang);
+  </script>
+  <script src="vote.js"></script>
+  <script>
+    function createParticles() {
+      const container = document.getElementById('particles');
+      if (!container) return;
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (15 + Math.random() * 25) + 's';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.width = (3 + Math.random() * 5) + 'px';
+        particle.style.height = particle.style.width;
+        container.appendChild(particle);
+      }
+    }
+    createParticles();
+  </script>
+</body>
+</html>

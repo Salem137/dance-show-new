@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Squid Game Show - Admin Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .login-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .login-card h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 1.8em;
+    }
+    .login-card .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 30px;
+      font-size: 0.9em;
+    }
+    .login-card .logo {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #FFD700, #FF9800);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8em;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.85em;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1em;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .form-group input:focus {
+      border-color: #FFD700;
+    }
+    .form-group input::placeholder {
+      color: #555;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #FFD700, #FF9800);
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .error-msg {
+      color: #EF4444;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.9em;
+      display: none;
+    }
+    .error-msg.show {
+      display: block;
+      animation: shake 0.5s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    .lang-toggle-login {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #ccc;
+      cursor: pointer;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 0.85em;
+    }
+    .lang-toggle-login:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body>
+  <button class="lang-toggle-login" id="lang-toggle" onclick="toggleLang()">EN</button>
+  <div class="login-card">
+    <div class="logo">🎮</div>
+    <h1>SQUID GAME</h1>
+    <p class="subtitle" data-i18n="login.subtitle">Enter password to access game controls</p>
+    <form id="login-form">
+      <div class="form-group">
+        <label data-i18n="login.password">Password</label>
+        <input type="password" id="password" data-i18n-placeholder="login.placeholder" placeholder="Enter admin password" autofocus>
+      </div>
+      <button type="submit" class="login-btn" id="login-btn" data-i18n="login.login">Login</button>
+    </form>
+    <div class="error-msg" id="error-msg" data-i18n="login.invalid">Invalid password</div>
+  </div>
+
+  <script>
+    let currentLang = localStorage.getItem('admin-lang') || 'en';
+    let translations = {};
+
+    async function loadTranslations() {
+      try {
+        const res = await fetch(`/admin/lang/${currentLang}.json`);
+        translations = await res.json();
+        document.getElementById('lang-toggle').textContent = currentLang.toUpperCase();
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        applyTranslations();
+      } catch (err) {
+        console.error('Failed to load translations:', err);
+      }
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      localStorage.setItem('admin-lang', currentLang);
+      loadTranslations();
+    }
+
+    function t(key) {
+      const keys = key.split('.');
+      let value = translations;
+      for (const k of keys) {
+        value = value?.[k];
+      }
+      return value || key;
+    }
+
+    function applyTranslations() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const translation = t(key);
+        if (translation) el.textContent = translation;
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const translation = t(key);
+        if (translation) el.placeholder = translation;
+      });
+    }
+
+    const form = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
+    const errorMsg = document.getElementById('error-msg');
+    const loginBtn = document.getElementById('login-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.classList.remove('show');
+      loginBtn.disabled = true;
+      loginBtn.textContent = t('login.loggingIn') || 'Logging in...';
+
+      try {
+        const res = await fetch('/admin/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: passwordInput.value })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.href = '/admin/';
+        } else {
+          errorMsg.classList.add('show');
+          loginBtn.disabled = false;
+          loginBtn.textContent = t('login.login') || 'Login';
+          passwordInput.value = '';
+          passwordInput.focus();
+        }
+      } catch (err) {
+        errorMsg.textContent = t('login.connectionError') || 'Connection error';
+        errorMsg.classList.add('show');
+        loginBtn.disabled = false;
+        loginBtn.textContent = t('login.login') || 'Login';
+      }
+    });
+
+    loadTranslations();
+  </script>
+</body>
+</html>

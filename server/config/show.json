@@ -1,0 +1,441 @@
+{
+  "showName": "SQUID GAME SHOW",
+  "showSubtitle": "An Interactive Game Experience",
+  "venue": "Performance Venue Name",
+  "showDate": "2026-08-22",
+  "showTime": "19:00",
+  "adminPassword": "Salem137753#",
+  "prizePerKill": 1000,
+  "totalPlayers": 40,
+  "scenes": [
+    {
+      "id": "intro",
+      "title": "Video Intro",
+      "type": "",
+      "description": "Cinematic intro video sets the mood before the live show begins.",
+      "video": "SQG intro.mp4",
+      "videoDuration": 90,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_1",
+      "title": "الرقصه الأولى فردي A",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_2",
+      "title": "الرقصه الثانيه فردي B",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "vote_1",
+      "title": "مين كسب؟ (فردي)",
+      "type": "branching",
+      "image": "test 1 .jpg",
+      "description": "التصويت بين A و B في الرقصة الفردية",
+      "choices": [
+        {
+          "id": "a_wins",
+          "label": "A كسب",
+          "color": "#E91E63",
+          "video": ""
+        },
+        {
+          "id": "b_wins",
+          "label": "B كسب",
+          "color": "#26A69A",
+          "video": ""
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "a_wins"
+    },
+    {
+      "id": "dance_3",
+      "title": "الرقصه الثالثه زوجي A",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_4",
+      "title": "الرقصه الرابعه زوجي B",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "vote_2",
+      "title": "مين كسب؟ (زوجي)",
+      "type": "branching",
+      "image": "test 1 .jpg",
+      "description": "التصويت بين A و B في الرقصة الزوجية",
+      "choices": [
+        {
+          "id": "a_wins",
+          "label": "A كسب",
+          "color": "#E91E63",
+          "video": ""
+        },
+        {
+          "id": "b_wins",
+          "label": "B كسب",
+          "color": "#26A69A",
+          "video": ""
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "a_wins"
+    },
+    {
+      "id": "dance_5",
+      "title": "الرقصه الخامسة مجموعه A",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_6",
+      "title": "الرقصه السادسه مجموعه B",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "vote_3",
+      "title": "مين كسب؟ (مجموعه)",
+      "type": "branching",
+      "image": "test 1 .jpg",
+      "description": "التصويت بين A و B في الرقصة الجماعية",
+      "choices": [
+        {
+          "id": "a_wins",
+          "label": "A كسب",
+          "color": "#E91E63",
+          "video": ""
+        },
+        {
+          "id": "b_wins",
+          "label": "B كسب",
+          "color": "#26A69A",
+          "video": ""
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "a_wins"
+    },
+    {
+      "id": "dance_7",
+      "title": "الرقصه السابعه فردي A",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_8",
+      "title": "الرقصه الثامنه فردي B",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "vote_4",
+      "title": "مين كسب؟ (فردي 2)",
+      "type": "branching",
+      "image": "test 1 .jpg",
+      "description": "التصويت بين A و B في الرقصة الفردية الثانية",
+      "choices": [
+        {
+          "id": "a_wins",
+          "label": "A كسب",
+          "color": "#E91E63",
+          "video": ""
+        },
+        {
+          "id": "b_wins",
+          "label": "B كسب",
+          "color": "#26A69A",
+          "video": ""
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "a_wins"
+    },
+    {
+      "id": "dance_9",
+      "title": "الرقصه التاسعه زوجي A",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_10",
+      "title": "الرقصه العاشره زوجي B",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "vote_5",
+      "title": "مين كسب؟ (زوجي 2)",
+      "type": "branching",
+      "image": "test 1 .jpg",
+      "description": "التصويت بين A و B في الرقصة الزوجية الثانية",
+      "choices": [
+        {
+          "id": "a_wins",
+          "label": "A كسب",
+          "color": "#E91E63",
+          "video": ""
+        },
+        {
+          "id": "b_wins",
+          "label": "B كسب",
+          "color": "#26A69A",
+          "video": ""
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "a_wins"
+    },
+    {
+      "id": "dance_11",
+      "title": "الرقصه الحاديه عشر مجموعه A",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_12",
+      "title": "الرقصه الثانيه عشر مجموعه B",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "vote_6",
+      "title": "مين كسب؟ (مجموعه 2)",
+      "type": "branching",
+      "image": "test 1 .jpg",
+      "description": "التصويت بين A و B في الرقصة الجماعية الثانية",
+      "choices": [
+        {
+          "id": "a_wins",
+          "label": "A كسب",
+          "color": "#E91E63",
+          "video": ""
+        },
+        {
+          "id": "b_wins",
+          "label": "B كسب",
+          "color": "#26A69A",
+          "video": ""
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "a_wins"
+    },
+    {
+      "id": "dance_13",
+      "title": "الرقصه الثالثه عشر فردي A",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "dance_14",
+      "title": "الرقصه الرابعه عشر فردي B",
+      "type": "linear",
+      "image": "test 1 .jpg",
+      "video": "",
+      "videoDuration": 10,
+      "limitTime": true,
+      "thumbnail": ""
+    },
+    {
+      "id": "vote_7",
+      "title": "مين كسب؟ (فردي 3)",
+      "type": "branching",
+      "image": "test 1 .jpg",
+      "description": "التصويت بين A و B في الرقصة الفردية الثالثة",
+      "choices": [
+        {
+          "id": "a_wins",
+          "label": "A كسب",
+          "color": "#E91E63",
+          "video": ""
+        },
+        {
+          "id": "b_wins",
+          "label": "B كسب",
+          "color": "#26A69A",
+          "video": ""
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "a_wins"
+    },
+    {
+      "id": "scene_1",
+      "title": "The Beginning",
+      "type": "branching",
+      "description": "40 dancers wake up on stage in chaos. Guards enter. The announcement plays: rules are explained. The audience must choose the first game.",
+      "announcement": "أهلاً بكم أيها المتسابقون. لقد تم اختياركم بعناية لخوض هذه التجربة. قواعد اللعبة بسيطة: الجمهور الموجود أمامكم هو الحاكم وأصحاب القرارات الحقيقيون لهذا العرض.",
+      "choices": [
+        {
+          "id": "dance_battle",
+          "label": "لعبة الرقصة الأخيرة",
+          "labelEn": "Dance Battle",
+          "color": "#E91E63",
+          "recommendation": "يُوصى به إذا كنت تريد بداية لعروض رقص",
+          "recommendationEn": "Recommended if you want to start with dance performances"
+        },
+        {
+          "id": "shadow_game",
+          "label": "لعبة الظل",
+          "labelEn": "Shadow Game",
+          "color": "#8B5CF6",
+          "recommendation": "يُوصى به إذا كنت تريد بداية لعروض تمثيلية",
+          "recommendationEn": "Recommended if you want to start with theatrical performances"
+        }
+      ],
+      "votingDuration": 15,
+      "fallbackChoice": "dance_battle"
+    },
+    {
+      "id": "dance_battle",
+      "title": "Dance Battle",
+      "type": "accumulative",
+      "description": "Head-to-head battles: Solo vs Solo, Duo vs Duo, Group vs Group. Audience votes Yes/No for each performer. Winner goes to Safe Zone, loser goes to Detention.",
+      "announcement": "لقد اختار الجمهور: لعبة الرقصة الأخيرة. القواعد كالتالي: ستقسم الفرق حركياً إلى مواجهات مباشرة: فردي ضد فردي، ثنائي ضد ثنائي، ومجموعات. الفائز بحكم الجمهور ينتقل فوراً إلى منطقة الأمان ولا يخوض أي مواجهة أخرى. الخاسرون يُساقون فوراً إلى منطقة الاحتجاز.",
+      "battleCount": 5,
+      "battleDuration": 60,
+      "votingDuration": 15,
+      "battles": [
+        {
+          "id": "battle_1",
+          "type": "solo",
+          "label": "Solo Battle 1",
+          "playerA": null,
+          "playerB": null
+        },
+        {
+          "id": "battle_2",
+          "type": "solo",
+          "label": "Solo Battle 2",
+          "playerA": null,
+          "playerB": null
+        },
+        {
+          "id": "battle_3",
+          "type": "duo",
+          "label": "Duo Battle 1",
+          "playerA": null,
+          "playerB": null
+        },
+        {
+          "id": "battle_4",
+          "type": "duo",
+          "label": "Duo Battle 2",
+          "playerA": null,
+          "playerB": null
+        },
+        {
+          "id": "battle_5",
+          "type": "group",
+          "label": "Group Battle",
+          "playerA": null,
+          "playerB": null
+        }
+      ]
+    },
+    {
+      "id": "shadow_game",
+      "title": "Shadow Game",
+      "type": "timer",
+      "description": "Total 3 minutes: 30 seconds to hide, then guards search with flashlights. Any movement in the light = caught. Caught players go to Detention.",
+      "announcement": "مرحباً بكم في لعبة الظل. القواعد كالتالي: عند انطفاء إضاءة الساحة بالكامل، أمامكم ثلاثون ثانية للاختباء. الحراس سيمشطون المسرح باستعمال الكشافات الضوئية. أي حركة داخل بقعة الضوء تعني كشفك فوراً. من يتم كشفه سيُساق إلى منطقة الاحتجاز. المهل الزمني الإجمالي للعبة هو ثلاث دقائق فقط. المتخفون عند عودة الضوء هم فقط الناجون.",
+      "totalDuration": 180,
+      "hideTime": 30,
+      "searchTime": 150
+    },
+    {
+      "id": "second_chance",
+      "title": "Second Chance",
+      "type": "category_vote",
+      "description": "The survivors face the audience. The audience votes for one of three categories. The top category gets rescued. The rest face execution.",
+      "announcement": "تعليمات التصويت: أمامكم خيار من ثلاث فئات: فئة الفردي، فئة الفردين، فئة المجموعات. يتم اختيار الفئة الأعلى تصويتاً بالكامل فقط؛ فإذا حازت فئة الفردي على أعلى تصويت، سينجو أعلى 3 أفراد أصواتاً فقط ولن يتم إنقاذ أي راقص من الفئتين الأخريين.",
+      "categories": [
+        {
+          "id": "solo",
+          "label": "الفردي",
+          "labelEn": "Solo",
+          "color": "#E91E63",
+          "rescueCount": 3
+        },
+        {
+          "id": "duo",
+          "label": "الفردين",
+          "labelEn": "Duo",
+          "color": "#26A69A",
+          "rescueCount": 4
+        },
+        {
+          "id": "group",
+          "label": "المجموعات",
+          "labelEn": "Group",
+          "color": "#FFD700",
+          "rescueCount": 4
+        }
+      ],
+      "votingDuration": 20,
+      "fallbackCategory": "solo"
+    }
+  ],
+  "server": {
+    "port": 3000
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "title": "Squid Game Show - Interactive Experience",
+  "nav": {
+    "brand": "Squid Game Show",
+    "story": "Story",
+    "characters": "Characters",
+    "bts": "Behind the Scenes",
+    "countdown": "Countdown",
+    "vote": "Vote Now"
+  },
+  "hero": {
+    "badge": "Interactive Performance",
+    "title1": "You Decide",
+    "title2": "The Game",
+    "designer": "Show Designer: Salem Ali Salem",
+    "subtitle": "An immersive interactive experience where the audience shapes the story through live voting.",
+    "desc": "Experience the game like never before. Your phone becomes part of the show, guiding the players through a branching narrative of choices and consequences.",
+    "cta1": "Learn More",
+    "cta2": "Start Voting",
+    "stats": {
+      "players": "Players",
+      "decisions": "Decision Points",
+      "minutes": "Minutes"
+    }
+  },
+  "story": {
+    "badge": "The Story",
+    "title": "An Island of Survival",
+    "desc": "A gripping tale of choices, consequences, and the human spirit.",
+    "p1": "On a remote island, far from civilization, a group of strangers find themselves drawn together by fate. They have chosen to participate in an extraordinary experiment — a game where every decision matters, where the line between trust and betrayal blurs with each passing moment.",
+    "p2": "This is not just a performance. It is a living, breathing story that evolves with every vote. The audience becomes the director, choosing the paths that shape the destiny of the players on stage. Will they choose joy or sorrow? Triumph or mystery? Every choice creates a new reality.",
+    "p3": "Inspired by the classic tension of survival games, this show blends classical ballet movements with dramatic, combat-style choreography to create a unique theatrical experience that has never been seen before in Egypt.",
+    "highlight1": { "title": "First of Its Kind", "desc": "The first interactive audience-driven show in Egypt" },
+    "highlight2": { "title": "Live Video Switching", "desc": "Your votes trigger real-time video projections on stage" },
+    "highlight3": { "title": "Original Music", "desc": "All music and sound design created exclusively for this show" },
+    "highlight4": { "title": "Every Show is Unique", "desc": "No two performances are ever the same" }
+  },
+  "characters": {
+    "badge": "The Players",
+    "title": "Characters",
+    "desc": "The Leader, 5 Guards, and 40 Players — each with their own story. Watch as they navigate through choices and consequences.",
+    "leader": "Organization Leader",
+    "guards": "Guards",
+    "players": "Players",
+    "socialLinks": "Social Links",
+    "upload": "Upload"
+  },
+  "bts": {
+    "badge": "Behind the Scenes",
+    "title": "The Journey",
+    "desc": "A glimpse into the preparation, rehearsals, and creative process behind the show.",
+    "upload": "Upload Video"
+  },
+  "countdown": {
+    "badge": "Coming Soon",
+    "title": "Show Starts In",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "datePlaceholder": "Show Date",
+    "timePlaceholder": "Show Time",
+    "saveTime": "Save Time"
+  },
+  "editBar": {
+    "save": "Save Changes",
+    "exit": "Exit Edit",
+    "mode": "EDIT MODE"
+  },
+  "credits": {
+    "text": "All music, videos, choreography, projections, and designs used in this show are original and creative works exclusively created by the show's designer Salem Ali Salem. No content has been copied or borrowed from any external source."
+  },
+  "footer": {
+    "desc": "An immersive, audience-driven interactive experience",
+    "story": "Story",
+    "characters": "Characters",
+    "bts": "Behind the Scenes",
+    "vote": "Vote"
+  },
+  "phone": {
+    "joy": "Joy",
+    "sorrow": "Sorrow",
+    "save": "Save Player",
+    "eliminate": "Eliminate Player"
+  },
+  "toast": {
+    "saved": "Changes saved successfully!",
+    "saveError": "Failed to save",
+    "timeSaved": "Show time saved!",
+    "unsavedConfirm": "You have unsaved changes. What would you like to do?\n\nOK = Exit without saving\nCancel = Go back"
+  }
+}

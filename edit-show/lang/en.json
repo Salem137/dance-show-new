@@ -1,0 +1,124 @@
+{
+  "title": "Edit Show",
+  "subtitle": "SQUID GAME SHOW",
+  "back": "Back to Admin",
+  "export": "Export",
+  "import": "Import",
+  "checkVideos": "Check Videos",
+  "saveChanges": "Save Changes",
+  "saved": "Saved",
+  "editPublic": "Edit Public",
+  "showInfo": {
+    "title": "Show Information",
+    "showName": "Show Name",
+    "subtitle": "Subtitle",
+    "venue": "Venue",
+    "date": "Date",
+    "time": "Time"
+  },
+  "scenes": {
+    "title": "Scene Sequence",
+    "count": "scenes",
+    "addScene": "Add Scene",
+    "addVideoScene": "Add Video Scene",
+    "addVotingScene": "Add Voting Scene",
+    "addNewScene": "Add New Scene",
+    "editScene": "Edit Scene",
+    "cancel": "Cancel",
+    "saveScene": "Save Scene",
+    "addChoice": "Add Choice",
+    "noScenes": "No scenes yet. Click 'Add Scene' to begin."
+  },
+  "sceneTypes": {
+    "intro": "Intro",
+    "linear": "Linear",
+    "branching": "Branching (Voting)",
+    "outro": "Outro"
+  },
+  "editModal": {
+    "sceneTitle": "Scene Title",
+    "sceneType": "Scene Type",
+    "videoFile": "Video File",
+    "imageFile": "Image File",
+    "noVideo": "No video",
+    "browse": "Browse",
+    "clear": "Clear",
+    "duration": "Duration (seconds)",
+    "limitTime": "Limit Time",
+    "limitTimeHint": "When enabled, video/image plays for the duration above then auto-advances",
+    "votingOptions": "Voting Options",
+    "choiceLabel": "Choice label"
+  },
+  "addModal": {
+    "title": "Add New Scene",
+    "enterTitle": "Enter scene title",
+    "sceneType": "Scene Type",
+    "votingChoices": "Voting Choices",
+    "choice1": "Choice 1 label",
+    "choice2": "Choice 2 label",
+    "addScene": "Add Scene",
+    "defaultChoice1": "Option A",
+    "defaultChoice2": "Option B",
+    "chooseBetween": "Choose between",
+    "and": "and"
+  },
+  "preview": {
+    "title": "Preview",
+    "close": "Close"
+  },
+  "check": {
+    "title": "Video Check Results",
+    "close": "Close",
+    "ok": "OK",
+    "missing": "Missing",
+    "broken": "Broken"
+  },
+  "upload": {
+    "title": "Upload Videos",
+    "imagesTitle": "Upload Images",
+    "single": "Drag video here or <span class='upload-link'>browse</span>",
+    "singleHint": "MP4 or WebM, max 500MB",
+    "bulk": "Drag multiple videos or <span class='upload-link'>browse all</span>",
+    "bulkHint": "Select multiple files at once",
+    "uploading": "Uploading...",
+    "complete": "Complete",
+    "failed": "Failed",
+    "files": "files"
+  },
+  "live": {
+    "blackout": "BLACKOUT",
+    "resume": "Resume",
+    "playNow": "Play Now",
+    "playingNow": "Playing now",
+    "blackoutOn": "BLACKOUT activated",
+    "blackoutOff": "BLACKOUT deactivated",
+    "publicScreenConnected": "Public Screen: Connected",
+    "publicScreenDisconnected": "Public Screen: Disconnected"
+  },
+  "sfx": {
+    "title": "SFX Quick Trigger",
+    "gunshot": "Gunshot",
+    "buzzer": "Buzzer",
+    "victory": "Victory",
+    "alarm": "Alarm",
+    "playing": "Playing",
+    "playFailed": "Failed to play SFX"
+  },
+  "toast": {
+    "saved": "Changes saved successfully!",
+    "unsaved": "Unsaved changes",
+    "saveError": "Failed to save changes",
+    "exported": "Configuration exported",
+    "imported": "Configuration imported",
+    "importError": "Invalid JSON file",
+    "checking": "Checking videos...",
+    "allVideosOk": "All videos found",
+    "missingVideos": "Some videos missing",
+    "sceneAdded": "Scene added",
+    "sceneSaved": "Scene saved",
+    "sceneDeleted": "Scene deleted",
+    "sceneDuplicated": "Scene duplicated",
+    "confirmDelete": "Delete this scene?",
+    "enterTitle": "Please enter a scene title"
+  }
+}

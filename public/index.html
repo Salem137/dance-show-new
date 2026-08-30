@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Squid Game Show - Interactive Experience</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="shapes-container">
+    <div class="squid-shape shape-triangle"><svg viewBox="0 0 100 100"><polygon points="50,10 10,90 90,90" fill="currentColor"/></svg></div>
+    <div class="squid-shape shape-square"><svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="currentColor"/></svg></div>
+    <div class="squid-shape shape-circle-shape"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="currentColor"/></svg></div>
+    <div class="squid-shape shape-small-1"><svg viewBox="0 0 100 100"><polygon points="50,10 10,90 90,90" fill="currentColor"/></svg></div>
+    <div class="squid-shape shape-small-2"><svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="currentColor"/></svg></div>
+    <div class="squid-shape shape-small-3"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="currentColor"/></svg></div>
+  </div>
+
+  <div class="particles" id="particles"></div>
+  <div class="edit-overlay"></div>
+
+  <!-- Edit Bar -->
+  <div class="edit-bar">
+    <button class="btn btn-gold" onclick="saveAll()" data-i18n="editBar.save">Save Changes</button>
+    <button class="btn btn-outline" onclick="exitEditMode()" data-i18n="editBar.exit">Exit Edit</button>
+    <span style="color: var(--sg-gold); font-size: 0.8em; margin-left: 8px;" data-i18n="editBar.mode">EDIT MODE</span>
+    <span id="auto-save-status" style="color: var(--sg-teal); font-size: 0.7em; margin-left: 8px; opacity: 0; transition: opacity 0.3s;"></span>
+  </div>
+
+  <!-- Character Detail Modal -->
+  <div class="char-modal-overlay" id="char-modal-overlay">
+    <button class="char-modal-back" onclick="closeCharModal()">&#8592;</button>
+    <div class="char-modal">
+      <div class="char-modal-image" id="char-modal-image">
+        <div class="placeholder-modal" id="char-modal-placeholder">👤</div>
+        <img id="char-modal-img" src="" style="display:none" decoding="async" width="600" height="700">
+      </div>
+      <div class="char-modal-content" id="char-modal-content">
+        <div class="char-modal-number" id="char-modal-number"></div>
+        <div class="char-modal-name" id="char-modal-name"></div>
+        <div class="char-modal-role" id="char-modal-role"></div>
+        <div class="char-modal-bio" id="char-modal-bio"></div>
+        <div class="char-modal-social" id="char-modal-social"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden inputs -->
+  <input type="file" id="char-image-input" accept="image/*" style="display:none">
+  <input type="file" id="video-input" accept="video/*" style="display:none">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-mobile-toggles">
+      <button class="lang-toggle" id="lang-toggle">EN</button>
+    </div>
+    <div class="nav-links">
+      <a href="#story" data-edit-key="nav.story">Story</a>
+      <a href="#characters" data-edit-key="nav.characters">Characters</a>
+      <a href="#bts" data-edit-key="nav.bts">Behind the Scenes</a>
+      <a href="#countdown" data-edit-key="nav.countdown">Countdown</a>
+      <a href="/client/" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.8em;" data-edit-key="nav.vote">Vote Now</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge editable-text" data-edit-key="hero.badge">Interactive Performance</div>
+      <h1><span class="editable-text" data-edit-key="hero.title1">You Decide</span><br><span class="highlight editable-text" data-edit-key="hero.title2">The Game</span></h1>
+      <div class="hero-designer editable-text" id="hero-designer" data-edit-key="hero.designer">Show Designer: Salem Ali Salem</div>
+      <p class="hero-subtitle editable-text" data-edit-key="hero.subtitle">An immersive interactive experience where the audience shapes the story through live voting.</p>
+      <p class="hero-desc editable-text" data-edit-key="hero.desc">Experience the game like never before. Your phone becomes part of the show, guiding the players through a branching narrative of choices and consequences.</p>
+      <div class="hero-cta">
+        <a href="#story" class="btn btn-primary editable-text" data-edit-key="hero.cta1">Learn More</a>
+        <a href="/client/" class="btn btn-teal editable-text" data-edit-key="hero.cta2">Start Voting</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-value">30</span><span class="stat-label editable-text" data-edit-key="hero.stats.players">Players</span></div>
+        <div class="stat"><span class="stat-value">5+</span><span class="stat-label editable-text" data-edit-key="hero.stats.decisions">Decision Points</span></div>
+        <div class="stat"><span class="stat-value">20</span><span class="stat-label editable-text" data-edit-key="hero.stats.minutes">Minutes</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-header">
+            <div class="live-badge"><span class="live-dot"></span><span data-i18n="phone.liveVoting">LIVE VOTING</span></div>
+            <div class="phone-timer">00:15</div>
+          </div>
+          <div class="phone-vote-area">
+            <button class="phone-vote-btn save">
+              <span class="vote-symbol">△</span>
+              <span class="vote-text editable-text" data-edit-key="phone.save">Save Player</span>
+            </button>
+            <button class="phone-vote-btn eliminate">
+              <span class="vote-symbol">◯</span>
+              <span class="vote-text editable-text" data-edit-key="phone.eliminate">Eliminate Player</span>
+            </button>
+          </div>
+          <div class="phone-vote-bar">
+            <div class="vote-bar-track">
+              <div class="vote-bar-fill save-fill" style="width:62%"><span>62%</span></div>
+              <div class="vote-bar-fill eliminate-fill" style="width:38%"><span>38%</span></div>
+            </div>
+          </div>
+          <div class="phone-footer">
+            <span class="phone-footer-text" data-i18n="phone.scanQR">Scan QR to Vote</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story" id="story">
+    <div class="container">
+      <div class="section-badge editable-text" data-edit-key="story.badge">The Story</div>
+      <h2 class="editable-text" data-edit-key="story.title">An Island of Survival</h2>
+      <p class="section-desc editable-text" data-edit-key="story.desc">A gripping tale of choices, consequences, and the human spirit.</p>
+      <div class="story-content">
+        <div class="story-text">
+          <p class="editable-text" data-edit-key="story.p1">On a remote island, far from civilization, a group of strangers find themselves drawn together by fate. They have chosen to participate in an extraordinary experiment — a game where every decision matters, where the line between trust and betrayal blurs with each passing moment.</p>
+          <p class="editable-text" data-edit-key="story.p2">This is not just a performance. It is a living, breathing story that evolves with every vote. The audience becomes the director, choosing the paths that shape the destiny of the players on stage. Will they choose joy or sorrow? Triumph or mystery? Every choice creates a new reality.</p>
+          <p class="editable-text" data-edit-key="story.p3">Inspired by the classic tension of survival games, this show blends classical ballet movements with dramatic, combat-style choreography to create a unique theatrical experience that has never been seen before in Egypt.</p>
+        </div>
+        <div class="story-highlights">
+          <div class="story-highlight"><div class="story-highlight-icon">🎭</div><div class="story-highlight-text"><h4 class="editable-text" data-edit-key="story.highlight1.title">First of Its Kind</h4><p class="editable-text" data-edit-key="story.highlight1.desc">The first interactive audience-driven show in Egypt</p></div></div>
+          <div class="story-highlight"><div class="story-highlight-icon">🎬</div><div class="story-highlight-text"><h4 class="editable-text" data-edit-key="story.highlight2.title">Live Video Switching</h4><p class="editable-text" data-edit-key="story.highlight2.desc">Your votes trigger real-time video projections on stage</p></div></div>
+          <div class="story-highlight"><div class="story-highlight-icon">🎵</div><div class="story-highlight-text"><h4 class="editable-text" data-edit-key="story.highlight3.title">Original Music</h4><p class="editable-text" data-edit-key="story.highlight3.desc">All music and sound design created exclusively for this show</p></div></div>
+          <div class="story-highlight"><div class="story-highlight-icon">🔄</div><div class="story-highlight-text"><h4 class="editable-text" data-edit-key="story.highlight4.title">Every Show is Unique</h4><p class="editable-text" data-edit-key="story.highlight4.desc">No two performances are ever the same</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section class="characters" id="characters">
+    <div class="container">
+      <div class="section-badge editable-text" data-edit-key="characters.badge">The Players</div>
+      <h2 class="editable-text" data-edit-key="characters.title">Characters</h2>
+      <p class="section-desc editable-text" data-edit-key="characters.desc">The Leader, 5 Guards, and 30 Players — each with their own story. Watch as they navigate through choices and consequences.</p>
+      <input type="text" id="char-search" placeholder="Search characters..." style="display:none; width:100%; max-width:400px; margin:0 auto 20px; padding:10px 16px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-primary); font-size:0.9em; text-align:center;" oninput="filterCharacters(this.value)">
+      <div id="bulk-upload-row" style="display:none; text-align:center; margin-bottom:15px;">
+        <button class="btn btn-gold" onclick="document.getElementById('bulk-upload-input').click()">📁 Bulk Upload Images</button>
+        <input type="file" id="bulk-upload-input" multiple accept="image/*" style="display:none" onchange="handleBulkUpload(this.files)">
+        <span id="bulk-upload-status" style="margin-left:10px; font-size:0.8em; color:var(--sg-teal);"></span>
+      </div>
+      <div class="pyramid" id="pyramid">
+        <div class="pyramid-level pyramid-players-label" data-i18n="characters.leader">القائد</div>
+        <div class="pyramid-level pyramid-leader" id="pyramid-leader"></div>
+        <div class="pyramid-level pyramid-players-label" data-i18n="characters.guards">الحراس</div>
+        <div class="pyramid-level pyramid-guards" id="pyramid-guards"></div>
+        <div class="pyramid-level pyramid-players-label" data-i18n="characters.players">اللاعبين</div>
+        <div class="characters-grid" id="characters-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEHIND THE SCENES -->
+  <section class="bts" id="bts">
+    <div class="container">
+      <div class="section-badge editable-text" data-edit-key="bts.badge">Behind the Scenes</div>
+      <h2 class="editable-text" data-edit-key="bts.title">The Journey</h2>
+      <p class="section-desc editable-text" data-edit-key="bts.desc">A glimpse into the preparation, rehearsals, and creative process behind the show.</p>
+      <div class="video-grid" id="bts-videos">
+        <div class="video-upload-card" id="video-upload-card" onclick="document.getElementById('video-input').click()">
+          <div class="upload-icon">+</div>
+          <div class="upload-text" data-i18n="bts.upload">Upload Video</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section class="countdown-section" id="countdown">
+    <div class="container">
+      <div class="section-badge editable-text" data-edit-key="countdown.badge">Coming Soon</div>
+      <h2 class="editable-text" data-edit-key="countdown.title">Show Starts In</h2>
+      <div class="countdown-container" id="countdown-container">
+        <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label" data-i18n="countdown.days">Days</span></div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label" data-i18n="countdown.hours">Hours</span></div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label" data-i18n="countdown.minutes">Minutes</span></div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-item"><span class="countdown-value" id="cd-seconds">00</span><span class="countdown-label" data-i18n="countdown.seconds">Seconds</span></div>
+      </div>
+      <div class="countdown-edit">
+        <input type="date" id="edit-show-date" data-i18n-placeholder="countdown.datePlaceholder" placeholder="Show Date">
+        <input type="time" id="edit-show-time" data-i18n-placeholder="countdown.timePlaceholder" placeholder="Show Time">
+        <button class="btn btn-teal btn-small" onclick="saveShowTime()" data-i18n="countdown.saveTime">Save Time</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDITS -->
+  <section class="credits-section">
+    <div class="container">
+      <div class="credits-box">
+        <p class="editable-text" data-edit-key="credits.text">All music, videos, choreography, projections, and designs used in this show are original and creative works exclusively created by the show's designer <span class="designer-name">Salem Ali Salem</span>. No content has been copied or borrowed from any external source.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3 class="editable-text" data-edit-key="footer.brand">Squid Game Show</h3>
+          <p class="editable-text" data-edit-key="footer.desc">An immersive, audience-driven interactive experience</p>
+        </div>
+        <div class="footer-links">
+          <a href="#story" data-edit-key="footer.story">Story</a>
+          <a href="#characters" data-edit-key="footer.characters">Characters</a>
+          <a href="#bts" data-edit-key="footer.bts">Behind the Scenes</a>
+          <a href="/client/" data-edit-key="footer.vote">Vote</a>
+        </div>
+      </div>
+      <div class="footer-bottom"><p class="editable-text" data-edit-key="footer.copyright">© 2026 Squid Game Show. Designed by Salem Ali Salem.</p></div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== EDIT MODE =====
+    const urlParams = new URLSearchParams(window.location.search);
+    const isEditMode = urlParams.get('edit') === 'true';
+    let charactersData = { characters: [] };
+    let showConfig = {};
+    let currentUploadIndex = -1;
+    let imageCacheBust = {};
+    let siteContent = {};
+    let hasUnsavedChanges = false;
+    let autoSaveTimer = null;
+
+    if (isEditMode) {
+      document.body.classList.add('edit-mode');
+      document.getElementById('char-search').style.display = 'block';
+      document.getElementById('bulk-upload-row').style.display = 'block';
+    }
+
+    function markDirty() {
+      hasUnsavedChanges = true;
+      scheduleAutoSave();
+    }
+
+    function scheduleAutoSave() {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(async () => {
+        if (!hasUnsavedChanges) return;
+        const statusEl = document.getElementById('auto-save-status');
+        if (statusEl) { statusEl.textContent = '⏳ Auto-saving...'; statusEl.style.opacity = '1'; }
+        try {
+          await fetch('/api/characters', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(charactersData)
+          });
+          const langFile = currentLang === 'ar' ? 'content-ar.json' : 'content-en.json';
+          await fetch('/edit-show/api/save-content?lang=' + langFile, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(siteContent)
+          });
+          hasUnsavedChanges = false;
+          if (statusEl) { statusEl.textContent = '✅ Auto-saved'; setTimeout(() => { statusEl.style.opacity = '0'; }, 2000); }
+        } catch (err) {
+          if (statusEl) { statusEl.textContent = '❌ Auto-save failed'; }
+        }
+      }, 10000);
+    }
+
+    window.addEventListener('beforeunload', (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+
+    function exitEditMode() {
+      if (hasUnsavedChanges) {
+        if (!confirm(translations.toast?.unsavedConfirm || 'فيه تغييرات محفوظة. عايز تعمل إيه?\n\nOK = خروج من غير حفظ\nCancel = رجوع')) {
+          return;
+        }
+      }
+      const url = new URL(window.location);
+      url.searchParams.delete('edit');
+      window.location.href = url.toString();
+    }
+
+    // ===== CONTENT EDITING =====
+    async function loadContent() {
+      const langFile = currentLang === 'ar' ? 'content-ar.json' : 'content-en.json';
+      try {
+        const res = await fetch('/public/' + langFile);
+        siteContent = await res.json();
+      } catch (err) {
+        siteContent = {};
+        document.querySelectorAll('[data-edit-key]').forEach(el => {
+          siteContent[el.getAttribute('data-edit-key')] = el.textContent.trim();
+        });
+      }
+      applyContent();
+      if (isEditMode) injectEditButtons();
+    }
+
+    function applyContent() {
+      document.querySelectorAll('[data-edit-key]').forEach(el => {
+        const key = el.getAttribute('data-edit-key');
+        if (siteContent[key] !== undefined) {
+          el.textContent = siteContent[key];
+        }
+      });
+    }
+
+    function injectEditButtons() {
+      document.querySelectorAll('.editable-text').forEach(el => {
+        if (el.querySelector('.inline-edit-btn')) return;
+        const btn = document.createElement('button');
+        btn.className = 'inline-edit-btn';
+        btn.innerHTML = '✏️';
+        btn.title = 'Edit this text';
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          startInlineEdit(el, btn);
+        };
+        el.style.position = 'relative';
+        el.appendChild(btn);
+      });
+    }
+
+    function startInlineEdit(el, btn) {
+      if (el.isContentEditable) return;
+      const key = el.getAttribute('data-edit-key');
+      const originalText = siteContent[key] || el.textContent.replace('✏️', '').trim();
+
+      el.contentEditable = 'true';
+      el.classList.add('editing');
+      el.focus();
+
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      const doneBtn = document.createElement('button');
+      doneBtn.className = 'inline-done-btn';
+      doneBtn.textContent = '✓';
+      doneBtn.onclick = (e) => {
+        e.stopPropagation();
+        finishInlineEdit(el, btn, doneBtn, key);
+      };
+      el.appendChild(doneBtn);
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'inline-cancel-btn';
+      cancelBtn.textContent = '✕';
+      cancelBtn.onclick = (e) => {
+        e.stopPropagation();
+        siteContent[key] = originalText;
+        el.textContent = originalText;
+        el.contentEditable = 'false';
+        el.classList.remove('editing');
+        el.appendChild(btn);
+      };
+      el.appendChild(cancelBtn);
+
+      el.onkeydown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          finishInlineEdit(el, btn, doneBtn, key);
+        }
+        if (e.key === 'Escape') {
+          siteContent[key] = originalText;
+          el.textContent = originalText;
+          el.contentEditable = 'false';
+          el.classList.remove('editing');
+          el.appendChild(btn);
+        }
+      };
+    }
+
+    function finishInlineEdit(el, editBtn, doneBtn, key) {
+      let text = el.textContent.replace('✓', '').replace('✕', '').trim();
+      siteContent[key] = text;
+      el.textContent = text;
+      el.contentEditable = 'false';
+      el.classList.remove('editing');
+      el.appendChild(editBtn);
+      markDirty();
+    }
+
+    // ===== CHARACTERS =====
+    let dragSrcIndex = null;
+
+    async function loadCharacters() {
+      try {
+        const res = await fetch('/api/characters');
+        charactersData = await res.json();
+        charactersData.characters.forEach(char => {
+          imageCacheBust[char.number] = Date.now();
+        });
+        renderCharacters();
+      } catch (err) { console.error('Failed to load characters:', err); }
+    }
+
+    function filterCharacters(query) {
+      const cards = document.querySelectorAll('.character-card');
+      const q = query.toLowerCase();
+      cards.forEach(card => {
+        const name = card.querySelector('.character-name')?.textContent.toLowerCase() || '';
+        const role = card.querySelector('.character-role')?.textContent.toLowerCase() || '';
+        card.style.display = (name.includes(q) || role.includes(q)) ? '' : 'none';
+      });
+    }
+
+    async function handleBulkUpload(files) {
+      const statusEl = document.getElementById('bulk-upload-status');
+      let uploaded = 0;
+      let charIndex = 0;
+      for (const file of files) {
+        while (charIndex < charactersData.characters.length && charactersData.characters[charIndex].image) charIndex++;
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+          const res = await fetch(`/api/characters/${charIndex}/upload`, { method: 'POST', body: formData });
+          const data = await res.json();
+          if (data.success) {
+            charactersData.characters[charIndex].image = data.image;
+            uploaded++;
+          }
+        } catch (e) { console.error('Bulk upload error:', e); }
+        charIndex++;
+      }
+      if (uploaded > 0) {
+        await fetch('/api/characters', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(charactersData)
+        });
+        renderCharacters();
+        statusEl.textContent = `✅ Uploaded ${uploaded} image(s)`;
+        setTimeout(() => { statusEl.textContent = ''; }, 3000);
+      }
+    }
+
+    function getCharText(char, field) {
+      if (currentLang === 'ar' && char[field + 'Ar']) return char[field + 'Ar'];
+      return char[field] || '';
+    }
+
+    function createCharCard(char, i) {
+      const card = document.createElement('div');
+      card.className = 'character-card';
+      card.draggable = isEditMode;
+      card.dataset.index = i;
+      card.onclick = (e) => { if (!e.target.closest('.char-edit-fields') && !e.target.closest('.char-upload-row') && !e.target.closest('.char-field')) openCharModal(i); };
+      card.ondragstart = (e) => { dragSrcIndex = i; e.dataTransfer.effectAllowed = 'move'; card.style.opacity = '0.4'; };
+      card.ondragend = () => { card.style.opacity = '1'; document.querySelectorAll('.character-card').forEach(c => c.style.borderTop = ''); };
+      card.ondragover = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; card.style.borderTop = '2px solid var(--sg-gold)'; };
+      card.ondragleave = () => { card.style.borderTop = ''; };
+      card.ondrop = (e) => {
+        e.preventDefault();
+        card.style.borderTop = '';
+        const targetIndex = parseInt(card.dataset.index);
+        if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
+          const moved = charactersData.characters.splice(dragSrcIndex, 1)[0];
+          charactersData.characters.splice(targetIndex, 0, moved);
+          renderCharacters();
+          markDirty();
+          saveAll();
+        }
+        dragSrcIndex = null;
+      };
+      card.innerHTML = `
+        <div class="character-image">
+          ${char.image ? `<img src="/assets/character-images/${char.image}?v=${imageCacheBust[char.number] || ''}" alt="${char.name}" loading="lazy" decoding="async" width="350" height="350" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="placeholder" style="display:none">👤</div>` : '<div class="placeholder">👤</div>'}
+          <div class="character-number">${char.number}</div>
+        </div>
+        <div class="character-info">
+          <div class="character-name">${getCharText(char, 'name')}</div>
+          <div class="character-role">${getCharText(char, 'role')}</div>
+        </div>
+        <div class="char-social-row">
+          ${char.instagramName ? `<a href="${char.instagramLink || '#'}" target="_blank" rel="noopener" class="char-social-btn instagram" onclick="event.stopPropagation()"><span class="social-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></span><span class="social-name">${char.instagramName}</span></a>` : ''}
+          ${char.tiktokName ? `<a href="${char.tiktokLink || '#'}" target="_blank" rel="noopener" class="char-social-btn tiktok" onclick="event.stopPropagation()"><span class="social-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78 2.92 2.92 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 3 15.57 6.33 6.33 0 0 0 9.37 22a6.33 6.33 0 0 0 6.37-6.22V9.4a8.16 8.16 0 0 0 3.85.96V7.14a4.85 4.85 0 0 1-3.83-.45h3.83z"/></svg></span><span class="social-name">${char.tiktokName}</span></a>` : ''}
+        </div>
+        <div class="char-edit-fields">
+          <input class="char-field" placeholder="Name (EN)" value="${char.name}" onchange="updateChar(${i},'name',this.value)" onclick="event.stopPropagation()">
+          <input class="char-field" placeholder="الاسم (AR)" value="${char.nameAr || ''}" onchange="updateChar(${i},'nameAr',this.value)" onclick="event.stopPropagation()" dir="rtl">
+          <input class="char-field" placeholder="Role (EN)" value="${char.role || ''}" onchange="updateChar(${i},'role',this.value)" onclick="event.stopPropagation()">
+          <input class="char-field" placeholder="الدور (AR)" value="${char.roleAr || ''}" onchange="updateChar(${i},'roleAr',this.value)" onclick="event.stopPropagation()" dir="rtl">
+          <textarea class="char-field char-bio-field" placeholder="Bio (EN)" onchange="updateChar(${i},'bio',this.value)" onclick="event.stopPropagation()" rows="3">${char.bio || ''}</textarea>
+          <textarea class="char-field char-bio-field" placeholder="السيرة الذاتية (AR)" onchange="updateChar(${i},'bioAr',this.value)" onclick="event.stopPropagation()" rows="3" dir="rtl">${char.bioAr || ''}</textarea>
+        </div>
+        <div class="char-social-edit">
+          <div class="char-social-edit-title" data-i18n="characters.socialLinks">Social Links</div>
+          <div class="char-social-edit-row">
+            <span class="social-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></span>
+            <input class="char-field" placeholder="Instagram Name" value="${char.instagramName || ''}" onchange="updateChar(${i},'instagramName',this.value)" onclick="event.stopPropagation()">
+            <input class="char-field" placeholder="Instagram Link" value="${char.instagramLink || ''}" onchange="updateChar(${i},'instagramLink',this.value)" onclick="event.stopPropagation()">
+          </div>
+          <div class="char-social-edit-row">
+            <span class="social-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78 2.92 2.92 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 3 15.57 6.33 6.33 0 0 0 9.37 22a6.33 6.33 0 0 0 6.37-6.22V9.4a8.16 8.16 0 0 0 3.85.96V7.14a4.85 4.85 0 0 1-3.83-.45h3.83z"/></svg></span>
+            <input class="char-field" placeholder="TikTok Name" value="${char.tiktokName || ''}" onchange="updateChar(${i},'tiktokName',this.value)" onclick="event.stopPropagation()">
+            <input class="char-field" placeholder="TikTok Link" value="${char.tiktokLink || ''}" onchange="updateChar(${i},'tiktokLink',this.value)" onclick="event.stopPropagation()">
+          </div>
+        </div>
+        <div class="char-upload-row">
+          <button class="char-upload-btn" onclick="event.stopPropagation(); uploadCharImage(${i})">📷 <span data-i18n="characters.upload">Upload</span></button>
+          <button class="char-upload-btn remove" onclick="event.stopPropagation(); removeCharImage(${i})">🗑️</button>
+        </div>
+      `;
+      return card;
+    }
+
+    function renderCharacters() {
+      const leaderEl = document.getElementById('pyramid-leader');
+      const guardsEl = document.getElementById('pyramid-guards');
+      const grid = document.getElementById('characters-grid');
+      if (!grid) return;
+      leaderEl.innerHTML = '';
+      guardsEl.innerHTML = '';
+      grid.innerHTML = '';
+      charactersData.characters.forEach((char, i) => {
+        const card = createCharCard(char, i);
+        if (char.type === 'leader') {
+          leaderEl.appendChild(card);
+        } else if (char.type === 'guard') {
+          guardsEl.appendChild(card);
+        } else {
+          grid.appendChild(card);
+        }
+      });
+    }
+
+    function updateChar(index, field, value) {
+      charactersData.characters[index][field] = value;
+      if (field === 'name' || field === 'role') renderCharacters();
+      fetch('/api/characters', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(charactersData)
+      });
+    }
+
+    function uploadCharImage(index) {
+      currentUploadIndex = index;
+      document.getElementById('char-image-input').click();
+    }
+
+    document.getElementById('char-image-input').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file || currentUploadIndex < 0) return;
+      const char = charactersData.characters[currentUploadIndex];
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('number', char.number);
+      try {
+        const res = await fetch('/api/upload-character-image', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          charactersData.characters[currentUploadIndex].image = data.filename;
+          imageCacheBust[char.number] = Date.now();
+          renderCharacters();
+          await fetch('/api/characters', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(charactersData)
+          });
+        }
+      } catch (err) { console.error('Upload failed:', err); }
+      e.target.value = '';
+    });
+
+    function removeCharImage(index) {
+      charactersData.characters[index].image = '';
+      imageCacheBust[charactersData.characters[index].number] = Date.now();
+      renderCharacters();
+      fetch('/api/characters', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(charactersData)
+      });
+    }
+
+    // ===== CHARACTER MODAL =====
+    function openCharModal(index) {
+      const char = charactersData.characters[index];
+      const overlay = document.getElementById('char-modal-overlay');
+      document.getElementById('char-modal-number').textContent = char.number;
+      document.getElementById('char-modal-name').textContent = getCharText(char, 'name');
+      document.getElementById('char-modal-role').textContent = getCharText(char, 'role') || (currentLang === 'ar' ? 'لاعب' : 'Player');
+      document.getElementById('char-modal-bio').textContent = getCharText(char, 'bio') || (currentLang === 'ar' ? 'لا توجد معلومات بعد.' : 'No information available yet.');
+
+      const img = document.getElementById('char-modal-img');
+      const placeholder = document.getElementById('char-modal-placeholder');
+      if (char.image) {
+        img.src = '/assets/character-images/' + char.image + '?v=' + (imageCacheBust[char.number] || '');
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+      } else {
+        img.style.display = 'none';
+        placeholder.style.display = 'flex';
+      }
+
+      // Social buttons
+      const socialEl = document.getElementById('char-modal-social');
+      let socialHTML = '';
+      if (char.instagramName) {
+        socialHTML += `<a href="${char.instagramLink || '#'}" target="_blank" rel="noopener" class="char-social-btn instagram"><span class="social-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></span><span class="social-name">${char.instagramName}</span></a>`;
+      }
+      if (char.tiktokName) {
+        socialHTML += `<a href="${char.tiktokLink || '#'}" target="_blank" rel="noopener" class="char-social-btn tiktok"><span class="social-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78 2.92 2.92 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 3 15.57 6.33 6.33 0 0 0 9.37 22a6.33 6.33 0 0 0 6.37-6.22V9.4a8.16 8.16 0 0 0 3.85.96V7.14a4.85 4.85 0 0 1-3.83-.45h3.83z"/></svg></span><span class="social-name">${char.tiktokName}</span></a>`;
+      }
+      socialEl.innerHTML = socialHTML;
+      socialEl.style.display = socialHTML ? 'flex' : 'none';
+
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCharModal() {
+      document.getElementById('char-modal-overlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Modal only closes via back button
+
+    // ===== VIDEOS =====
+    async function loadVideos() {
+      try {
+        const res = await fetch('/edit-show/api/videos');
+        const videos = await res.json();
+        const grid = document.getElementById('bts-videos');
+        const uploadCard = document.getElementById('video-upload-card');
+        grid.innerHTML = '';
+        videos.forEach(v => {
+          const card = document.createElement('div');
+          card.className = 'video-card';
+          card.innerHTML = `
+            <video src="/assets/videos/${v.name}" muted loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>
+            <div class="video-card-info"><h4>${v.name}</h4></div>
+            <button class="video-delete-btn" onclick="deleteVideo('${v.name}')">✕</button>
+          `;
+          grid.appendChild(card);
+        });
+        grid.appendChild(uploadCard);
+      } catch (err) { console.error('Failed to load videos:', err); }
+    }
+
+    document.getElementById('video-input').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('video', file);
+      try {
+        const res = await fetch('/edit-show/api/upload-video', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) loadVideos();
+      } catch (err) { console.error('Upload failed:', err); }
+      e.target.value = '';
+    });
+
+    async function deleteVideo(filename) {
+      if (!confirm('Delete ' + filename + '?')) return;
+      try {
+        await fetch('/edit-show/api/delete-video/' + filename, { method: 'DELETE' });
+        loadVideos();
+      } catch (err) { console.error('Delete failed:', err); }
+    }
+
+    // ===== SHOW TIME =====
+    async function loadShowConfig() {
+      try {
+        const res = await fetch('/api/config');
+        showConfig = await res.json();
+        startCountdown();
+        if (isEditMode) {
+          document.getElementById('edit-show-date').value = showConfig.showDate || '';
+          document.getElementById('edit-show-time').value = showConfig.showTime || '';
+        }
+      } catch (err) { console.error('Failed to load config:', err); }
+    }
+
+    function startCountdown() {
+      if (!showConfig.showDate || !showConfig.showTime) return;
+      const showDateTime = new Date(showConfig.showDate + 'T' + showConfig.showTime + ':00');
+      function update() {
+        const now = new Date();
+        const diff = showDateTime - now;
+        if (diff <= 0) { ['cd-days','cd-hours','cd-minutes','cd-seconds'].forEach(id => document.getElementById(id).textContent = '00'); return; }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('cd-days').textContent = String(d).padStart(2, '0');
+        document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+        document.getElementById('cd-minutes').textContent = String(m).padStart(2, '0');
+        document.getElementById('cd-seconds').textContent = String(s).padStart(2, '0');
+      }
+      update();
+      setInterval(update, 1000);
+    }
+
+    async function saveShowTime() {
+      const date = document.getElementById('edit-show-date').value;
+      const time = document.getElementById('edit-show-time').value;
+      try {
+        const res = await fetch('/edit-show/api/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ showDate: date, showTime: time })
+        });
+        const data = await res.json();
+        if (data.success) { showConfig.showDate = date; showConfig.showTime = time; startCountdown(); alert(translations.toast?.timeSaved || 'Show time saved!'); }
+      } catch (err) { console.error('Save failed:', err); }
+    }
+
+    // ===== SAVE ALL =====
+    async function saveAll() {
+      try {
+        await fetch('/api/characters', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(charactersData)
+        });
+        const langFile = currentLang === 'ar' ? 'content-ar.json' : 'content-en.json';
+        await fetch('/edit-show/api/save-content?lang=' + langFile, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(siteContent)
+        });
+        hasUnsavedChanges = false;
+        alert(translations.toast?.saved || 'Changes saved successfully!');
+      } catch (err) { console.error('Save failed:', err); alert(translations.toast?.saveError || 'Failed to save'); }
+    }
+
+    // ===== PARTICLES =====
+    function createParticles() {
+      const c = document.getElementById('particles');
+      if (!c) return;
+      for (let i = 0; i < 15; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (15 + Math.random() * 25) + 's';
+        p.style.animationDelay = Math.random() * 15 + 's';
+        p.style.width = (3 + Math.random() * 5) + 'px';
+        p.style.height = p.style.width;
+        c.appendChild(p);
+      }
+    }
+
+    // ===== LANGUAGE =====
+    let currentLang = localStorage.getItem('lang') || 'en';
+    let translations = {};
+    async function loadTranslations(lang) {
+      try {
+        const res = await fetch('/public/lang/' + lang + '.json');
+        translations = await res.json();
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          const val = key.split('.').reduce((a, k) => a && a[k], translations);
+          if (val) el.textContent = val;
+        });
+        document.getElementById('lang-toggle').textContent = lang === 'en' ? 'AR' : 'EN';
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      } catch (err) { console.error(err); }
+    }
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      localStorage.setItem('lang', currentLang);
+      loadContent();
+      loadTranslations(currentLang);
+      renderCharacters();
+    });
+
+    // ===== SMOOTH SCROLL =====
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        const t = document.querySelector(this.getAttribute('href'));
+        if (t) t.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // ===== INIT =====
+    createParticles();
+    loadContent();
+    loadCharacters();
+    loadShowConfig();
+    loadVideos();
+    loadTranslations(currentLang);
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

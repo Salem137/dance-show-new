@@ -1,0 +1,124 @@
+{
+  "title": "تعديل العرض",
+  "subtitle": "عرض لعبة الحبار",
+  "back": "العودة للإدارة",
+  "export": "تصدير",
+  "import": "استيراد",
+  "checkVideos": "فحص الفيديوهات",
+  "saveChanges": "حفظ التغييرات",
+  "saved": "تم الحفظ",
+  "editPublic": "تعديل الموقع العام",
+  "showInfo": {
+    "title": "معلومات العرض",
+    "showName": "اسم العرض",
+    "subtitle": "العنوان الفرعي",
+    "venue": "المكان",
+    "date": "التاريخ",
+    "time": "الوقت"
+  },
+  "scenes": {
+    "title": "تسلسل المشاهد",
+    "count": "مشاهد",
+    "addScene": "إضافة مشهد",
+    "addVideoScene": "إضافة مشهد فيديو",
+    "addVotingScene": "إضافة مشهد تصويت",
+    "addNewScene": "إضافة مشهد جديد",
+    "editScene": "تعديل المشهد",
+    "cancel": "إلغاء",
+    "saveScene": "حفظ المشهد",
+    "addChoice": "إضافة خيار",
+    "noScenes": "لا توجد مشاهد بعد. اضغط 'إضافة مشهد' للبدء."
+  },
+  "sceneTypes": {
+    "intro": "مقدمة",
+    "linear": "خطي",
+    "branching": "تفرع (تصويت)",
+    "outro": "ختام"
+  },
+  "editModal": {
+    "sceneTitle": "عنوان المشهد",
+    "sceneType": "نوع المشهد",
+    "videoFile": "ملف الفيديو",
+    "imageFile": "ملف الصورة",
+    "noVideo": "لا يوجد فيديو",
+    "browse": "تصفح",
+    "clear": "مسح",
+    "duration": "المدة (ثوانٍ)",
+    "limitTime": "تحديد الوقت",
+    "limitTimeHint": "عند التفعيل، الفيديو/الصورة يظهر للمدة المحددة ثم يتخطى تلقائياً",
+    "votingOptions": "خيارات التصويت",
+    "choiceLabel": "عنوان الخيار"
+  },
+  "addModal": {
+    "title": "إضافة مشهد جديد",
+    "enterTitle": "أدخل عنوان المشهد",
+    "sceneType": "نوع المشهد",
+    "votingChoices": "خيارات التصويت",
+    "choice1": "عنوان الخيار الأول",
+    "choice2": "عنوان الخيار الثاني",
+    "addScene": "إضافة المشهد",
+    "defaultChoice1": "الخيار أ",
+    "defaultChoice2": "الخيار ب",
+    "chooseBetween": "اختر بين",
+    "and": "و"
+  },
+  "preview": {
+    "title": "معاينة",
+    "close": "إغلاق"
+  },
+  "check": {
+    "title": "نتائج فحص الفيديو",
+    "close": "إغلاق",
+    "ok": "جيد",
+    "missing": "مفقود",
+    "broken": "معطل"
+  },
+  "upload": {
+    "title": "رفع الفيديوهات",
+    "imagesTitle": "رفع الصور",
+    "single": "اسحب الفيديو هنا أو <span class='upload-link'>تصفح</span>",
+    "singleHint": "MP4 أو WebM، حد أقصى 500 ميجا",
+    "bulk": "اسحب عدة فيديوهات أو <span class='upload-link'>تصفح الكل</span>",
+    "bulkHint": "اختر عدة ملفات مرة واحدة",
+    "uploading": "جاري الرفع...",
+    "complete": "تم",
+    "failed": "فشل",
+    "files": "ملف"
+  },
+  "live": {
+    "blackout": "BLACKOUT",
+    "resume": "استئناف",
+    "playNow": "تشغيل الآن",
+    "playingNow": "جاري التشغيل",
+    "blackoutOn": "تم تفعيلBLACKOUT",
+    "blackoutOff": "تم إلغاء BLACKOUT",
+    "publicScreenConnected": "الشاشة العامة: متصلة",
+    "publicScreenDisconnected": "الشاشة العامة: غير متصلة"
+  },
+  "sfx": {
+    "title": "اختصارات الصوت",
+    "gunshot": "طلقة",
+    "buzzer": "بuzzer",
+    "victory": "نصر",
+    "alarm": "إنذار",
+    "playing": "جاري التشغيل",
+    "playFailed": "فشل تشغيل الصوت"
+  },
+  "toast": {
+    "saved": "تم حفظ التغييرات بنجاح!",
+    "unsaved": "تغييرات غير محفوظة",
+    "saveError": "فشل في حفظ التغييرات",
+    "exported": "تم تصدير الإعدادات",
+    "imported": "تم استيراد الإعدادات",
+    "importError": "ملف JSON غير صالح",
+    "checking": "جاري فحص الفيديوهات...",
+    "allVideosOk": "جميع الفيديوهات موجودة",
+    "missingVideos": "بعض الفيديوهات مفقودة",
+    "sceneAdded": "تمت إضافة المشهد",
+    "sceneSaved": "تم حفظ المشهد",
+    "sceneDeleted": "تم حذف المشهد",
+    "sceneDuplicated": "تم نسخ المشهد",
+    "confirmDelete": "هل تريد حذف هذا المشهد؟",
+    "enterTitle": "أدخل عنوان المشهد"
+  }
+}

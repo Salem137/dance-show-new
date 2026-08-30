@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Squid Game Show - Analytics</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="analytics-container">
+    <header class="analytics-header">
+      <h1 data-i18n="analytics.title">SQUID GAME ANALYTICS</h1>
+      <div class="header-actions">
+        <button class="btn btn-small lang-toggle" id="lang-toggle" onclick="toggleLang()">EN</button>
+        <button class="btn btn-secondary" onclick="location.href='/admin/'" data-i18n="analytics.backToAdmin">Back to Admin</button>
+      </div>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="total-voters">0</div>
+        <div class="stat-label" data-i18n="analytics.totalVoters">Total Voters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🗳️</div>
+        <div class="stat-value" id="total-votes">0</div>
+        <div class="stat-label" data-i18n="analytics.totalVotes">Total Votes Cast</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎬</div>
+        <div class="stat-value" id="total-scenes">0</div>
+        <div class="stat-label" data-i18n="analytics.scenesCompleted">Scenes Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value" id="avg-time">0s</div>
+        <div class="stat-label" data-i18n="analytics.avgVoteTime">Avg. Vote Time</div>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h2 data-i18n="analytics.sceneResults">Scene Results</h2>
+      <div id="scene-results" class="scene-results">
+        <p class="no-data" data-i18n="analytics.noData">No show data yet. Start a show to see analytics.</p>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h2 data-i18n="analytics.choicePopularity">Choice Popularity</h2>
+      <div id="choice-popularity" class="choice-popularity">
+        <p class="no-data" data-i18n="analytics.noVotingData">No voting data yet.</p>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h2 data-i18n="analytics.showHistory">Show History</h2>
+      <div id="show-history" class="show-history">
+        <p class="no-data" data-i18n="analytics.noHistory">No history yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let currentLang = localStorage.getItem('admin-lang') || 'en';
+    let translations = {};
+
+    async function loadTranslations() {
+      try {
+        const res = await fetch(`/admin/lang/${currentLang}.json`);
+        translations = await res.json();
+        document.getElementById('lang-toggle').textContent = currentLang.toUpperCase();
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          const val = t(key);
+          if (val) el.textContent = val;
+        });
+        if (showState) updateAnalytics();
+      } catch (err) {
+        console.error('Failed to load translations:', err);
+      }
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      localStorage.setItem('admin-lang', currentLang);
+      loadTranslations();
+    }
+
+    function t(key) {
+      const keys = key.split('.');
+      let value = translations;
+      for (const k of keys) {
+        value = value?.[k];
+      }
+      return value || key;
+    }
+
+    const socket = io();
+    socket.emit('register', 'admin');
+
+    let showState = null;
+
+    socket.on('connect', () => {
+      loadState();
+      loadTranslations();
+    });
+
+    socket.on('show_state', (state) => {
+      showState = state;
+      updateAnalytics();
+    });
+
+    async function loadState() {
+      try {
+        const res = await fetch('/admin/api/state');
+        showState = await res.json();
+        updateAnalytics();
+      } catch (err) {
+        console.error('Failed to load state:', err);
+      }
+    }
+
+    function updateAnalytics() {
+      if (!showState) return;
+
+      const connections = showState.connections || {};
+      document.getElementById('total-voters').textContent = connections.voters || 0;
+
+      let totalVotes = 0;
+      if (showState.sceneHistory && showState.sceneHistory.length > 0) {
+        showState.sceneHistory.forEach(item => {
+          totalVotes += item.totalVotes || 0;
+        });
+      }
+      document.getElementById('total-votes').textContent = totalVotes || showState.totalVotes || 0;
+      document.getElementById('total-scenes').textContent = showState.sceneHistory?.length || 0;
+
+      // Scene results
+      const sceneResults = document.getElementById('scene-results');
+      if (showState.sceneHistory && showState.sceneHistory.length > 0) {
+        let html = '';
+        showState.sceneHistory.forEach((item, index) => {
+          const wasManual = item.votes === 'manual_override';
+          const wasTie = item.wasTie;
+          const wasFallback = item.wasFallback;
+          
+          let badge = '';
+          if (wasManual) badge = `<span class="badge badge-warning">${t('analytics.manual')}</span>`;
+          else if (wasTie) badge = `<span class="badge badge-info">${t('analytics.tie')}</span>`;
+          else if (wasFallback) badge = `<span class="badge badge-secondary">${t('analytics.random')}</span>`;
+          else badge = `<span class="badge badge-success">${t('analytics.voted')}</span>`;
+
+          html += `
+            <div class="result-card">
+              <div class="result-header">
+                <span class="scene-number">#${index + 1}</span>
+                <span class="scene-title">${item.title}</span>
+                ${badge}
+              </div>
+              <div class="result-winner">
+                <span class="winner-label" style="color: ${item.winner?.color || '#FFD700'}">${item.winner?.label || 'N/A'}</span>
+                <span class="winner-votes">${item.totalVotes || 0} ${t('analytics.votes') || 'votes'}</span>
+              </div>
+            </div>
+          `;
+        });
+        sceneResults.innerHTML = html;
+      }
+
+      // Choice popularity
+      const choicePopularity = document.getElementById('choice-popularity');
+      if (showState.sceneHistory && showState.sceneHistory.length > 0) {
+        const choiceCounts = {};
+        showState.sceneHistory.forEach(item => {
+          if (item.winner?.label) {
+            choiceCounts[item.winner.label] = (choiceCounts[item.winner.label] || 0) + 1;
+          }
+        });
+
+        const sorted = Object.entries(choiceCounts).sort((a, b) => b[1] - a[1]);
+        if (sorted.length > 0) {
+          let html = '';
+          sorted.forEach(([label, count]) => {
+            const percent = Math.round((count / showState.sceneHistory.length) * 100);
+            html += `
+              <div class="popularity-item">
+                <span class="popularity-label">${label}</span>
+                <div class="popularity-bar">
+                  <div class="popularity-fill" style="width: ${percent}%"></div>
+                </div>
+                <span class="popularity-count">${count}${t('analytics.occurrences') || 'x'} (${percent}%)</span>
+              </div>
+            `;
+          });
+          choicePopularity.innerHTML = html;
+        }
+      }
+
+      // Show History
+      const showHistory = document.getElementById('show-history');
+      if (showState.sceneHistory && showState.sceneHistory.length > 0) {
+        let html = '';
+        showState.sceneHistory.forEach((item, index) => {
+          const date = item.timestamp ? new Date(item.timestamp).toLocaleString() : '';
+          html += `
+            <div class="history-item">
+              <div class="history-number">#${index + 1}</div>
+              <div class="history-details">
+                <span class="history-title">${item.title}</span>
+                <span class="history-winner">${t('analytics.winner') || 'Winner:'} <strong style="color: ${item.winner?.color || '#ccc'}">${item.winner?.label || 'N/A'}</strong></span>
+                <span class="history-votes">${item.totalVotes || 0} ${t('analytics.votes') || 'votes'}</span>
+                ${date ? `<span class="history-date">${date}</span>` : ''}
+              </div>
+            </div>
+          `;
+        });
+        showHistory.innerHTML = html;
+      } else {
+        showHistory.innerHTML = `<p class="no-data">${t('analytics.noHistory')}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "squid-game-show",
+  "version": "1.0.0",
+  "description": "Squid Game Show - Interactive Audience Voting System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^2.2.0",
+    "node-osc": "^9.0.1",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.7.2"
+  }
+}

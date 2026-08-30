@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Squid Game Show - Control Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 3D Live Shapes -->
+  <div class="sg-shape-circle"></div>
+  <div class="sg-shape-triangle"></div>
+  <div class="sg-shape-square"></div>
+  <div class="sg-shape-circle-sm"></div>
+  <div class="sg-shape-triangle-lg"></div>
+  <div class="sg-shape-diamond"></div>
+  <div class="sg-ambient-glow"></div>
+  <div class="sg-depth-fog"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Stage Preview (PiP) -->
+  <div id="stage-preview" class="stage-preview">
+    <div class="preview-header">
+      <span class="preview-title" data-i18n="preview.stagePreview">Stage Preview</span>
+      <div class="preview-controls">
+        <button class="preview-btn" onclick="togglePreviewSize()" data-i18n-title="preview.resize" title="Resize">⤢</button>
+        <button class="preview-btn" onclick="togglePreview()" data-i18n-title="preview.minimize" title="Minimize">—</button>
+        <button class="preview-btn" onclick="closePreview()" data-i18n-title="preview.close" title="Close">✕</button>
+      </div>
+    </div>
+    <div class="preview-body" id="preview-body">
+      <iframe id="stage-preview-frame" src="/stage" class="preview-iframe"></iframe>
+    </div>
+  </div>
+  <button id="preview-toggle-btn" class="preview-toggle-btn hidden" onclick="showPreview()" data-i18n="preview.stage">📺 Stage</button>
+
+  <!-- Keyboard Shortcuts Help -->
+  <div id="shortcuts-panel" class="shortcuts-panel hidden">
+    <h3 data-i18n="shortcuts.title">Keyboard Shortcuts</h3>
+    <div class="shortcut-grid">
+      <div class="shortcut-item"><kbd>Space</kbd><span data-i18n="shortcuts.startNext">Start / Next Scene</span></div>
+      <div class="shortcut-item"><kbd>Z</kbd><span data-i18n="shortcuts.previous">Previous Scene</span></div>
+      <div class="shortcut-item"><kbd>P</kbd><span data-i18n="shortcuts.pauseVideo">Pause Video</span></div>
+      <div class="shortcut-item"><kbd>R</kbd><span data-i18n="shortcuts.resumeVideo">Resume Video</span></div>
+      <div class="shortcut-item"><kbd>S</kbd><span data-i18n="shortcuts.skipVideo">Skip Video</span></div>
+      <div class="shortcut-item"><kbd>Q</kbd><span data-i18n="shortcuts.qrCode">QR Code</span></div>
+      <div class="shortcut-item"><kbd>F</kbd><span data-i18n="shortcuts.fullscreen">Fullscreen</span></div>
+      <div class="shortcut-item"><kbd>M</kbd><span data-i18n="shortcuts.togglePreview">Toggle Preview</span></div>
+      <div class="shortcut-item"><kbd>?</kbd><span data-i18n="shortcuts.toggleShortcuts">Toggle Shortcuts</span></div>
+    </div>
+  </div>
+
+  <div class="admin-container">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-left">
+        <div class="connection-indicator" id="connection-indicator">
+          <span class="conn-dot"></span>
+          <span class="conn-text" data-i18n="status.connected">Connected</span>
+        </div>
+        <div class="show-phase" id="show-phase" data-i18n="status.idle">IDLE</div>
+      </div>
+      <div class="status-right">
+        <div class="clock" id="clock"></div>
+        <button class="btn btn-small lang-toggle" onclick="toggleLanguage()" title="Toggle Language" id="lang-toggle">EN</button>
+        <button class="btn btn-small" onclick="toggleFullscreen()" title="Fullscreen (F)">⛶</button>
+        <button class="btn btn-small" onclick="toggleShortcuts()" title="Shortcuts (?)">?</button>
+        <a href="/admin/api/logout" class="btn btn-small btn-danger" data-i18n="controls.logout">Logout</a>
+      </div>
+    </div>
+
+    <header class="admin-header">
+      <div class="header-left">
+        <h1>SQUID GAME</h1>
+        <span class="show-name" id="show-name" data-i18n="header.title">SHOW</span>
+      </div>
+      <div class="header-right">
+        <div class="connection-stats">
+          <div class="stat stat-voters">
+            <span class="stat-count" id="voter-count">0</span>
+            <span class="stat-label" data-i18n="connection.voters">Voters</span>
+          </div>
+          <div class="stat stat-admins">
+            <span class="stat-count" id="admin-count">0</span>
+            <span class="stat-label" data-i18n="connection.admin">Admins</span>
+          </div>
+          <div class="stat stat-stage">
+            <span class="stat-count" id="stage-count">0</span>
+            <span class="stat-label" data-i18n="connection.stage">Stage</span>
+          </div>
+        </div>
+        <div id="admin-warning" class="admin-warning hidden" data-i18n="status.reconnectFailed">⚠ Another admin is connected!</div>
+        <button class="btn btn-small" onclick="openQR()" data-i18n="qr.title">QR Code</button>
+        <button class="btn btn-small btn-secondary" onclick="window.open('/admin/analytics.html', '_blank')" data-i18n="analytics.title">Analytics</button>
+        <button class="btn btn-small btn-secondary" onclick="location.href='/edit-show/'" data-i18n="controls.editShow">Edit Show</button>
+        <button class="btn btn-small btn-danger" id="btn-reset" onclick="resetShow()" data-i18n="controls.resetShow">Reset Show</button>
+      </div>
+    </header>
+
+    <!-- Voting Timer (shown when voting is open) -->
+    <div class="voting-timer-bar hidden" id="voting-timer-bar">
+      <div class="timer-label" data-i18n="timer.votingTime">VOTING TIME</div>
+      <div class="timer-display">
+        <svg viewBox="0 0 100 100" class="timer-ring-small">
+          <circle class="timer-bg-small" cx="50" cy="50" r="44"/>
+          <circle class="timer-progress-small" cx="50" cy="50" r="44" id="admin-timer-ring"/>
+        </svg>
+        <span class="timer-text-small" id="admin-timer-text">0</span>
+      </div>
+      <div class="timer-votes" id="timer-votes">0 votes</div>
+    </div>
+
+    <div class="admin-grid">
+      <!-- Show Control -->
+      <div class="panel show-control">
+        <h2 data-i18n="controls.startShow">Show Control</h2>
+        <div class="control-buttons">
+          <button class="btn btn-primary" id="btn-start" onclick="startShow()" data-i18n="controls.startShow">Start Show</button>
+          <button class="btn btn-secondary" id="btn-prev" onclick="previousScene()" disabled data-i18n="controls.previousScene">Previous</button>
+          <button class="btn btn-secondary" id="btn-next" onclick="nextScene()" disabled data-i18n="controls.nextScene">Next Scene</button>
+          <button class="btn btn-warning" id="btn-pause" onclick="pauseVideo()" disabled data-i18n="controls.pause">Pause</button>
+          <button class="btn btn-primary" id="btn-resume" onclick="resumeVideo()" disabled data-i18n="controls.resume">Resume</button>
+          <button class="btn btn-secondary" id="btn-skip" onclick="skipVideo()" disabled data-i18n="controls.skip">Skip</button>
+        </div>
+        <div class="show-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+          </div>
+          <span class="progress-text" id="progress-text" data-i18n="controls.notStarted">Not started</span>
+        </div>
+      </div>
+
+      <!-- Current Scene -->
+      <div class="panel current-scene">
+        <h2 data-i18n="scene.currentScene">Current Scene</h2>
+        <div class="scene-info" id="scene-info">
+          <p class="no-scene" data-i18n="scene.noActive">No active scene</p>
+        </div>
+      </div>
+
+      <!-- Next Scene Preview -->
+      <div class="panel next-scene">
+        <h2 data-i18n="scene.nextScene">Next Scene</h2>
+        <div class="next-scene-info" id="next-scene-info">
+          <p class="no-scene" data-i18n="scene.noNext">No next scene</p>
+        </div>
+      </div>
+
+      <!-- Live Votes -->
+      <div class="panel live-votes">
+        <h2 data-i18n="votes.title">Live Votes</h2>
+        <div class="total-votes">
+          <span class="count" id="total-votes">0</span>
+          <span class="label" data-i18n="votes.total">Total votes</span>
+        </div>
+        <div class="vote-bars" id="vote-bars"></div>
+      </div>
+
+      <!-- Manual Override -->
+      <div class="panel manual-override">
+        <h2 data-i18n="override.title">Manual Override</h2>
+        <p class="hint" data-i18n="override.hint">Override vote result if needed</p>
+        <div class="override-buttons" id="override-buttons">
+          <p class="no-scene" data-i18n="override.enable">Start show to enable</p>
+        </div>
+      </div>
+
+      <!-- Scene History -->
+      <div class="panel scene-history">
+        <h2 data-i18n="history.title">SCENE HISTORY</h2>
+        <div class="history-list" id="history-list">
+          <p class="no-scene" data-i18n="history.empty">No scenes completed yet</p>
+        </div>
+      </div>
+
+      <!-- Stage View -->
+      <div class="panel stage-link">
+        <h2 data-i18n="stage.title">Stage URL</h2>
+        <p class="hint" data-i18n="stage.hint">Open this on the projector/laptop connected to the display</p>
+        <button class="btn btn-primary" onclick="window.open('/stage', '_blank')" data-i18n="stage.open">Open Stage View</button>
+        <div class="stage-url" id="stage-url"></div>
+      </div>
+
+      <!-- Player Status -->
+      <div class="panel player-status-panel">
+        <h2 data-i18n="players.title">Player Status</h2>
+        <div class="player-stats-row">
+          <div class="player-stat"><span class="player-stat-count" id="player-active-count">30</span><span class="player-stat-label">Active</span></div>
+          <div class="player-stat safe"><span class="player-stat-count" id="player-safe-count">0</span><span class="player-stat-label">Safe</span></div>
+          <div class="player-stat detained"><span class="player-stat-count" id="player-detained-count">0</span><span class="player-stat-label">Detained</span></div>
+          <div class="player-stat killed"><span class="player-stat-count" id="player-killed-count">0</span><span class="player-stat-label">Killed</span></div>
+          <div class="player-stat prize"><span class="player-stat-count" id="player-prize">$0</span><span class="player-stat-label">Prize</span></div>
+        </div>
+        <div class="player-filter">
+          <button class="btn btn-small filter-btn active" onclick="filterPlayers('all')">All</button>
+          <button class="btn btn-small filter-btn" onclick="filterPlayers('active')">Active</button>
+          <button class="btn btn-small filter-btn" onclick="filterPlayers('safe')">Safe</button>
+          <button class="btn btn-small filter-btn" onclick="filterPlayers('detained')">Detained</button>
+          <button class="btn btn-small filter-btn" onclick="filterPlayers('killed')">Killed</button>
+        </div>
+        <div class="player-list" id="player-list"></div>
+        <div class="player-actions">
+          <button class="btn btn-danger btn-small" id="btn-kill-detained" onclick="killAllDetained()">Kill All Detained</button>
+        </div>
+      </div>
+
+      <!-- Battle Controls -->
+      <div class="panel battle-controls-panel">
+        <h2 data-i18n="battle.title">Battle Controls</h2>
+        <div class="battle-status" id="battle-status">
+          <p class="no-scene">No active battle</p>
+        </div>
+        <div class="battle-action-buttons">
+          <button class="btn btn-primary btn-small" id="btn-start-battles" onclick="startBattles()" disabled>Start Battles</button>
+          <button class="btn btn-secondary btn-small" id="btn-next-battle" onclick="nextBattle()" disabled>Next Battle</button>
+        </div>
+        <div class="battle-results" id="battle-results"></div>
+      </div>
+
+      <!-- Shadow Game Controls -->
+      <div class="panel shadow-controls-panel">
+        <h2 data-i18n="shadow.title">Shadow Game</h2>
+        <div class="shadow-status" id="shadow-status">
+          <p class="no-scene">Not active</p>
+        </div>
+        <div class="shadow-action-buttons">
+          <button class="btn btn-secondary btn-small" onclick="setShadowPhase('hiding')" disabled id="btn-shadow-hide">Start Hiding</button>
+          <button class="btn btn-secondary btn-small" onclick="setShadowPhase('searching')" disabled id="btn-shadow-search">Start Searching</button>
+          <button class="btn btn-secondary btn-small" onclick="setShadowPhase('ended')" disabled id="btn-shadow-end">End Game</button>
+        </div>
+      </div>
+
+      <!-- QR Code -->
+      <div class="panel qr-panel">
+        <h2 data-i18n="qr.title">QR Code</h2>
+        <div class="qr-display" id="qr-display">
+          <p data-i18n="qr.notFound">Click "QR Code" to generate</p>
+        </div>
+        <button class="btn btn-small" onclick="generateQR()" data-i18n="qr.generate">Refresh QR</button>
+      </div>
+
+      <!-- Diagnostics -->
+      <div class="panel diagnostics-panel">
+        <h2 data-i18n="diagnostics.title">Diagnostics</h2>
+        <button class="btn btn-small" onclick="runDiagnostics()" data-i18n="diagnostics.run">Run Check</button>
+        <div class="diagnostics-results" id="diagnostics-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    // 3D Parallax Mouse Effect
+    const shapes = document.querySelectorAll('.sg-shape-circle, .sg-shape-triangle, .sg-shape-square, .sg-shape-circle-sm, .sg-shape-triangle-lg, .sg-shape-diamond');
+
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+      shapes.forEach((shape, i) => {
+        const depth = (i + 1) * 8;
+        const rotX = y * (i + 1) * 3;
+        const rotY = x * (i + 1) * 3;
+        const moveX = x * depth;
+        const moveY = y * depth;
+
+        shape.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) rotateX(${-rotX}deg) rotateY(${rotY}deg)`;
+      });
+    });
+
+    // Subtle background movement on scroll
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      document.body.style.backgroundPositionY = `${20 + scrollY * 0.05}%`;
+    });
+  </script>
+</body>
+</html>

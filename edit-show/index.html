@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">Edit Show - Squid Game Show</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="floating-shapes">
+    <div class="shape shape-circle"></div>
+    <div class="shape shape-triangle"></div>
+    <div class="shape shape-square"></div>
+    <div class="shape shape-diamond"></div>
+  </div>
+  <div class="depth-fog"></div>
+
+  <div class="container">
+    <header>
+      <div class="header-brand">
+        <h1 data-i18n="title">Edit Show</h1>
+        <span class="subtitle" data-i18n="subtitle">SQUID GAME SHOW</span>
+      </div>
+      <div class="header-actions">
+        <div class="ws-status" id="ws-status">
+          <span class="ws-dot disconnected" id="ws-dot"></span>
+          <span id="ws-label">Public Screen: Disconnected</span>
+        </div>
+        <button class="btn btn-danger" id="blackout-btn" onclick="toggleBlackout()">
+          <span class="btn-icon">⬛</span> <span data-i18n="live.blackout">BLACKOUT</span>
+        </button>
+        <button class="btn btn-secondary" onclick="if(hasUnsavedChanges && !confirm('فيه تغييرات محفوظة. عايز تعمل إيه?\n\nOK = خروج من غير حفظ\nCancel = رجوع')) return; location.href='/admin/'">
+          <span class="btn-icon">←</span> <span data-i18n="back">Back to Admin</span>
+        </button>
+        <!-- Export/Import hidden -->
+        <button class="btn btn-warning" onclick="exportConfig()" style="display:none">
+          <span class="btn-icon">↓</span> <span data-i18n="export">Export</span>
+        </button>
+        <button class="btn btn-secondary" onclick="importConfig()" style="display:none">
+          <span class="btn-icon">↑</span> <span data-i18n="import">Import</span>
+        </button>
+        <button class="btn btn-warning" onclick="checkVideos()">
+          <span class="btn-icon">✓</span> <span data-i18n="checkVideos">Check Videos</span>
+        </button>
+        <button class="btn btn-teal" onclick="window.open('/public/?edit=true', '_blank')" style="background: linear-gradient(135deg, #26A69A, #00897B); color: #fff;">
+          <span class="btn-icon">🌐</span> <span data-i18n="editPublic">Edit Public</span>
+        </button>
+        <button class="btn btn-primary" onclick="saveConfig()">
+          <span class="btn-icon">💾</span> <span data-i18n="saveChanges">Save Changes</span>
+        </button>
+        <button class="lang-toggle" id="lang-toggle">EN</button>
+      </div>
+    </header>
+
+    <div class="show-info">
+      <div class="show-info-header">
+        <h2 data-i18n="showInfo.title">Show Information</h2>
+        <div class="show-info-status" id="save-status" data-i18n="saved">Saved</div>
+      </div>
+      <div class="info-grid">
+        <div class="info-row">
+          <label data-i18n="showInfo.showName">Show Name</label>
+          <input type="text" id="showName" data-i18n-placeholder="showInfo.showName" placeholder="Show Name">
+        </div>
+        <div class="info-row">
+          <label data-i18n="showInfo.subtitle">Subtitle</label>
+          <input type="text" id="showSubtitle" data-i18n-placeholder="showInfo.subtitle" placeholder="Subtitle">
+        </div>
+        <div class="info-row">
+          <label data-i18n="showInfo.venue">Venue</label>
+          <input type="text" id="venue" data-i18n-placeholder="showInfo.venue" placeholder="Venue">
+        </div>
+        <div class="info-row">
+          <label data-i18n="showInfo.date">Date</label>
+          <input type="date" id="showDate">
+        </div>
+        <div class="info-row">
+          <label data-i18n="showInfo.time">Time</label>
+          <input type="time" id="showTime">
+        </div>
+      </div>
+    </div>
+
+    <div class="scenes-header">
+      <div class="scenes-header-left">
+        <h2 data-i18n="scenes.title">Scene Sequence</h2>
+        <span class="scene-count" id="scene-count">0 <span data-i18n="scenes.count">scenes</span></span>
+      </div>
+      <div class="add-scene-buttons">
+        <button class="btn btn-primary" onclick="openAddSceneModal('linear')">
+          <span class="btn-icon">+</span> <span data-i18n="scenes.addVideoScene">Add Video Scene</span>
+        </button>
+        <button class="btn btn-success" onclick="openAddSceneModal('branching')">
+          <span class="btn-icon">+</span> <span data-i18n="scenes.addVotingScene">Add Voting Scene</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="scenes-list" class="scenes-list"></div>
+
+    <div class="upload-section">
+      <h2 data-i18n="upload.title">Upload Videos</h2>
+      <div class="upload-areas">
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="video-input" accept="video/mp4,video/webm" hidden>
+          <div class="upload-text">
+            <span class="upload-icon">📁</span>
+            <p data-i18n-html="upload.single">Drag video here or <span class="upload-link" onclick="document.getElementById('video-input').click()">browse</span></p>
+            <span class="upload-hint" data-i18n="upload.singleHint">MP4 or WebM, max 500MB</span>
+          </div>
+        </div>
+        <div class="upload-area upload-area-bulk" id="upload-area-bulk">
+          <input type="file" id="video-input-bulk" accept="video/mp4,video/webm" multiple hidden>
+          <div class="upload-text">
+            <span class="upload-icon">📦</span>
+            <p data-i18n-html="upload.bulk">Drag multiple videos or <span class="upload-link" onclick="document.getElementById('video-input-bulk').click()">browse all</span></p>
+            <span class="upload-hint" data-i18n="upload.bulkHint">Select multiple files at once</span>
+          </div>
+        </div>
+      </div>
+      <div class="upload-progress" id="upload-progress" style="display:none">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <span class="progress-text" id="progress-text" data-i18n="upload.uploading">Uploading...</span>
+      </div>
+      <div class="upload-queue" id="upload-queue"></div>
+    </div>
+
+    <div class="upload-section">
+      <h2 data-i18n="upload.imagesTitle">Upload Images</h2>
+      <div class="upload-areas">
+        <div class="upload-area upload-area-image" id="upload-area-image">
+          <input type="file" id="image-input" accept="image/*" hidden>
+          <div class="upload-text">
+            <span class="upload-icon">🖼️</span>
+            <p>Drag image here or <span class="upload-link" onclick="document.getElementById('image-input').click()">browse</span></p>
+            <span class="upload-hint">JPG, PNG, GIF, WebP, max 50MB</span>
+          </div>
+        </div>
+      </div>
+      <div class="upload-progress" id="image-upload-progress" style="display:none">
+        <div class="progress-bar"><div class="progress-fill" id="image-progress-fill"></div></div>
+        <span class="progress-text" id="image-progress-text">Uploading...</span>
+      </div>
+    </div>
+
+    <input type="file" id="import-input" accept=".json" style="display:none" onchange="handleImport(event)">
+  </div>
+
+  <!-- Edit Scene Modal -->
+  <div id="edit-scene-modal" class="modal">
+    <div class="modal-content modal-lg" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 data-i18n="scenes.editScene">Edit Scene</h3>
+        <button class="modal-close" onclick="closeEditSceneModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-scene-index">
+        <div class="form-group">
+          <label data-i18n="editModal.sceneTitle">Scene Title</label>
+          <input type="text" id="edit-scene-title" data-i18n-placeholder="editModal.sceneTitle" placeholder="Scene title">
+        </div>
+        <div class="form-group">
+          <label data-i18n="editModal.sceneType">Scene Type</label>
+          <select id="edit-scene-type">
+            <option value="intro" data-i18n="sceneTypes.intro">Intro</option>
+            <option value="linear" data-i18n="sceneTypes.linear">Linear</option>
+            <option value="branching" data-i18n="sceneTypes.branching">Branching (Voting)</option>
+            <option value="outro" data-i18n="sceneTypes.outro">Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="editModal.videoFile">Video File</label>
+          <div class="video-selector">
+            <input type="text" id="edit-scene-video" placeholder="video.mp4" readonly>
+            <button class="btn btn-secondary btn-small" onclick="browseVideoForScene()" data-i18n="editModal.browse">Browse</button>
+            <button class="btn btn-secondary btn-small" onclick="clearSceneVideo()" data-i18n="editModal.clear">Clear</button>
+          </div>
+          <div class="video-list" id="scene-video-list"></div>
+        </div>
+        <div class="form-group">
+          <label data-i18n="editModal.imageFile">Image File</label>
+          <input type="file" id="edit-scene-image-input" accept="image/*" style="display:none" onchange="handleImageSelect(event)">
+          <div class="video-selector">
+            <input type="text" id="edit-scene-image" placeholder="image.jpg" readonly>
+            <button class="btn btn-secondary btn-small" onclick="document.getElementById('edit-scene-image-input').click()">Browse</button>
+            <button class="btn btn-secondary btn-small" onclick="clearSceneImage()">✕</button>
+          </div>
+        </div>
+        <div class="limit-time-section">
+          <div class="limit-time-row">
+            <div class="limit-time-info">
+              <span class="limit-time-icon">⏱️</span>
+              <span class="limit-time-title" data-i18n="editModal.limitTime">Limit Time</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="edit-scene-limit-time" onchange="toggleLimitTime()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="limit-time-desc" data-i18n="editModal.limitTimeHint">When enabled, video/image plays for the duration below then auto-advances</div>
+        </div>
+        <div class="form-group" id="duration-group" style="display:none">
+          <label data-i18n="editModal.duration">Duration (seconds)</label>
+          <input type="number" id="edit-scene-duration" min="1" max="600" value="10">
+        </div>
+        <div class="branching-options" id="branching-options" style="display:none">
+          <h4 data-i18n="editModal.votingOptions">Voting Options</h4>
+          <div id="choices-editor"></div>
+          <button class="btn btn-success btn-small" onclick="addChoice()">
+            <span class="btn-icon">+</span> <span data-i18n="scenes.addChoice">Add Choice</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeEditSceneModal()" data-i18n="scenes.cancel">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSceneEdit()" data-i18n="scenes.saveScene">Save Scene</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Scene Modal -->
+  <div id="add-scene-modal" class="modal">
+    <div class="modal-content modal-sm" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 data-i18n="addModal.title">Add New Scene</h3>
+        <button class="modal-close" onclick="closeAddSceneModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label data-i18n="editModal.sceneTitle">Scene Title</label>
+          <input type="text" id="new-scene-title" data-i18n-placeholder="addModal.enterTitle" placeholder="Enter scene title">
+        </div>
+        <div class="form-group">
+          <label data-i18n="editModal.sceneType">Scene Type</label>
+          <div class="type-selector">
+            <button class="type-btn active" data-type="linear" onclick="selectSceneType(this)">
+              <span class="type-icon">▶</span>
+              <span data-i18n="sceneTypes.linear">Linear</span>
+            </button>
+            <button class="type-btn" data-type="intro" onclick="selectSceneType(this)">
+              <span class="type-icon">🎬</span>
+              <span data-i18n="sceneTypes.intro">Intro</span>
+            </button>
+            <button class="type-btn" data-type="branching" onclick="selectSceneType(this)">
+              <span class="type-icon">🗳</span>
+              <span data-i18n="sceneTypes.branching">Branching</span>
+            </button>
+            <button class="type-btn" data-type="outro" onclick="selectSceneType(this)">
+              <span class="type-icon">🏁</span>
+              <span data-i18n="sceneTypes.outro">Outro</span>
+            </button>
+          </div>
+        </div>
+        <div class="branching-setup" id="branching-setup" style="display:none">
+          <h4 data-i18n="addModal.votingChoices">Voting Choices</h4>
+          <div class="choice-setup">
+            <div class="choice-input-row">
+              <input type="text" id="new-choice1-label" data-i18n-placeholder="addModal.choice1" placeholder="Choice 1 label">
+              <input type="color" id="new-choice1-color" value="#E91E63">
+            </div>
+            <div class="choice-input-row">
+              <input type="text" id="new-choice2-label" data-i18n-placeholder="addModal.choice2" placeholder="Choice 2 label">
+              <input type="color" id="new-choice2-color" value="#26A69A">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeAddSceneModal()" data-i18n="scenes.cancel">Cancel</button>
+        <button class="btn btn-primary" onclick="addNewScene()" data-i18n="addModal.addScene">Add Scene</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="preview-modal" class="modal" onclick="closePreview()">
+    <div class="modal-content modal-lg" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="preview-title" data-i18n="preview.title">Preview</h3>
+        <button class="modal-close" onclick="closePreview()">✕</button>
+      </div>
+      <div class="modal-body">
+        <video id="preview-video" controls></video>
+      </div>
+      <div class="modal-footer">
+        <span id="preview-filename"></span>
+        <button class="btn btn-secondary" onclick="closePreview()" data-i18n="preview.close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check Results Modal -->
+  <div id="check-modal" class="modal" onclick="closeCheckModal()">
+    <div class="modal-content modal-lg" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 data-i18n="check.title">Video Check Results</h3>
+        <button class="modal-close" onclick="closeCheckModal()">✕</button>
+      </div>
+      <div class="modal-body" id="check-results-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeCheckModal()" data-i18n="check.close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // i18n for Edit Show page
+    let currentLang = localStorage.getItem('admin-lang') || 'en';
+    let editTranslations = {};
+
+    async function loadEditTranslations(lang) {
+      try {
+        const res = await fetch(`/edit-show/lang/${lang}.json`);
+        editTranslations = await res.json();
+        applyEditTranslations();
+        document.getElementById('lang-toggle').textContent = lang === 'en' ? 'AR' : 'EN';
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = lang;
+      } catch (err) {
+        console.error('Failed to load edit translations:', err);
+      }
+    }
+
+    function t(key) {
+      const keys = key.split('.');
+      let value = editTranslations;
+      for (const k of keys) {
+        value = value?.[k];
+      }
+      return value || key;
+    }
+
+    function applyEditTranslations() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = t(key);
+        if (val) el.textContent = val;
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        const val = t(key);
+        if (val) el.innerHTML = val;
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const val = t(key);
+        if (val) el.placeholder = val;
+      });
+    }
+
+    loadEditTranslations(currentLang);
+
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      localStorage.setItem('admin-lang', currentLang);
+      loadEditTranslations(currentLang);
+    });
+  </script>
+  <script src="edit-show.js"></script>
+
+  <!-- SFX Quick Trigger Drawer -->
+  <div class="sfx-toggle" id="sfx-toggle" onclick="toggleSfxDrawer()">🎵 SFX</div>
+  <div class="sfx-drawer" id="sfx-drawer">
+    <div class="sfx-header">
+      <h4 data-i18n="sfx.title">SFX Quick Trigger</h4>
+      <button class="modal-close" onclick="toggleSfxDrawer()">✕</button>
+    </div>
+    <div class="sfx-grid">
+      <button class="sfx-btn gunshot" onclick="triggerSfx('gunshot')">
+        <span class="sfx-icon">🔫</span>
+        <span class="sfx-label" data-i18n="sfx.gunshot">Gunshot</span>
+      </button>
+      <button class="sfx-btn buzzer" onclick="triggerSfx('buzzer')">
+        <span class="sfx-icon">⏰</span>
+        <span class="sfx-label" data-i18n="sfx.buzzer">Buzzer</span>
+      </button>
+      <button class="sfx-btn victory" onclick="triggerSfx('victory')">
+        <span class="sfx-icon">🏆</span>
+        <span class="sfx-label" data-i18n="sfx.victory">Victory</span>
+      </button>
+      <button class="sfx-btn alarm" onclick="triggerSfx('alarm')">
+        <span class="sfx-icon">🚨</span>
+        <span class="sfx-label" data-i18n="sfx.alarm">Alarm</span>
+      </button>
+    </div>
+  </div>
+</body>
+</html>

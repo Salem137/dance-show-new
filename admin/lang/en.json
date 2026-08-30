@@ -1,0 +1,186 @@
+{
+  "header": {
+    "title": "SQUID GAME SHOW",
+    "subtitle": "Admin Control Panel"
+  },
+  "status": {
+    "waiting": "WAITING TO START",
+    "active": "ACTIVE",
+    "voting": "VOTING",
+    "video": "VIDEO",
+    "ended": "ENDED",
+    "idle": "IDLE",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "reconnecting": "Reconnecting...",
+    "reconnectFailed": "Reconnect failed"
+  },
+  "controls": {
+    "startShow": "Start Show",
+    "nextScene": "Next Scene",
+    "previousScene": "Previous",
+    "pause": "Pause",
+    "resume": "Resume",
+    "skip": "Skip",
+    "editShow": "Edit Show",
+    "resetShow": "RESET SHOW",
+    "logout": "Logout",
+    "notStarted": "Not started"
+  },
+  "scene": {
+    "currentScene": "Current Scene",
+    "nextScene": "Next Scene",
+    "noActive": "No active scene",
+    "noNext": "No next scene",
+    "sceneNumber": "Scene {current} of {total}",
+    "sceneOf": "Scene {current} of {total}",
+    "intro": "Intro",
+    "linear": "Linear",
+    "branching": "Voting",
+    "outro": "Outro"
+  },
+  "votes": {
+    "title": "Live Votes",
+    "total": "Total votes",
+    "noVotes": "No votes yet",
+    "vote": "vote",
+    "votes": "votes"
+  },
+  "override": {
+    "title": "Manual Override",
+    "hint": "Override vote result if needed",
+    "enable": "Start show to enable",
+    "success": "Manual override:"
+  },
+  "history": {
+    "title": "SCENE HISTORY",
+    "empty": "No scenes completed yet",
+    "na": "N/A",
+    "manual": " (manual)"
+  },
+  "analytics": {
+    "title": "SQUID GAME ANALYTICS",
+    "voters": "Unique Voters",
+    "totalVotes": "Total Votes",
+    "scenesCompleted": "Scenes Completed",
+    "avgVoteTime": "Avg. Vote Time",
+    "sceneResults": "Scene Results",
+    "choicePopularity": "Choice Popularity",
+    "showHistory": "Show History",
+    "noData": "No show data yet. Start a show to see analytics.",
+    "noVotingData": "No voting data yet.",
+    "noHistory": "No history yet.",
+    "manual": "Manual",
+    "tie": "Tie",
+    "random": "Random",
+    "voted": "Voted",
+    "winner": "Winner:",
+    "occurrences": "x",
+    "votes": "votes",
+    "backToAdmin": "Back to Admin",
+    "totalVoters": "Total Voters"
+  },
+  "connection": {
+    "admin": "Admins",
+    "voters": "Voters",
+    "stage": "Stage",
+    "votersCount": "Voters",
+    "adminsCount": "Admins",
+    "stagesCount": "Stages"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "startNext": "Start / Next Scene",
+    "previous": "Previous Scene",
+    "pauseVideo": "Pause Video",
+    "resumeVideo": "Resume Video",
+    "skipVideo": "Skip Video",
+    "qrCode": "QR Code",
+    "fullscreen": "Fullscreen",
+    "togglePreview": "Toggle Preview",
+    "toggleShortcuts": "Toggle Shortcuts"
+  },
+  "qr": {
+    "title": "QR Code",
+    "generate": "Refresh QR",
+    "generating": "Generating...",
+    "notFound": "QR image not found",
+    "loadError": "Failed to load image",
+    "error": "Error:"
+  },
+  "diagnostics": {
+    "title": "Diagnostics",
+    "run": "Run Check",
+    "running": "Running diagnostics...",
+    "server": "Server",
+    "running": "Running",
+    "socketio": "Socket.IO",
+    "ok": "OK",
+    "found": "Found",
+    "missing": "Missing",
+    "failed": "Failed to run diagnostics"
+  },
+  "stage": {
+    "title": "Stage URL",
+    "hint": "Open this on the projector/laptop connected to the display",
+    "open": "Open Stage View"
+  },
+  "reset": {
+    "title": "Reset Show",
+    "confirm": "Are you sure you want to reset the show? This will stop everything and reset all votes."
+  },
+  "preview": {
+    "stagePreview": "Stage Preview",
+    "resize": "Resize",
+    "minimize": "Minimize",
+    "close": "Close",
+    "stage": "📺 Stage"
+  },
+  "timer": {
+    "votingTime": "VOTING TIME"
+  },
+  "toast": {
+    "showStarted": "Show started!",
+    "showEnded": "Show has ended!",
+    "showReset": "Show has been reset",
+    "sceneAdvanced": "Advanced to next scene",
+    "sceneBack": "Went back to previous scene",
+    "firstScene": "Already at first scene",
+    "videoPaused": "Video paused",
+    "videoResumed": "Video resumed",
+    "videoSkipped": "Video skipped",
+    "fullscreen": "Fullscreen not supported",
+    "winner": "Winner:",
+    "unknown": "Unknown",
+    "connected": "Reconnected!",
+    "connectionLost": "Connection lost. Reconnecting...",
+    "reconnecting": "Reconnecting...",
+    "failedStart": "Failed to start show",
+    "failedBack": "Failed to go back",
+    "failedAdvance": "Failed to advance scene",
+    "failedPause": "Failed to pause video",
+    "failedResume": "Failed to resume video",
+    "failedSkip": "Failed to skip video",
+    "failedOverride": "Failed to override",
+    "failedReset": "Failed to reset show",
+    "qrGenerated": "QR Code generated",
+    "qrNotFound": "QR image not found in response",
+    "qrFailed": "Failed to generate QR",
+    "diagComplete": "Diagnostics complete",
+    "diagFailed": "Diagnostics failed"
+  },
+  "confirm": {
+    "title": "Confirm",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "login": {
+    "subtitle": "Enter password to access game controls",
+    "password": "Password",
+    "placeholder": "Enter admin password",
+    "login": "Login",
+    "loggingIn": "Logging in...",
+    "invalid": "Invalid password",
+    "connectionError": "Connection error"
+  }
+}

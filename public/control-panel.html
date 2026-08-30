@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Squid Game Show - Control Panel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+  :root {
+    --sg-pink: #E91E63;
+    --sg-pink-dark: #AD1457;
+    --sg-teal: #26A69A;
+    --sg-teal-dark: #00897B;
+    --sg-dark: #0A0A0F;
+    --sg-gold: #FFD700;
+    --sg-purple: #8B5CF6;
+    --sg-pink-glow: rgba(233, 30, 99, 0.4);
+    --sg-teal-glow: rgba(38, 166, 154, 0.4);
+    --sg-gold-glow: rgba(255, 215, 0, 0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--sg-dark);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  /* Animated Background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(233, 30, 99, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(38, 166, 154, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.06) 0%, transparent 60%);
+    animation: bgShift 15s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes bgShift {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* ===== SQUID GAME SHAPES ===== */
+  .shapes-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .squid-shape {
+    position: absolute;
+    opacity: 0.12;
+  }
+
+  .squid-shape svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 20px currentColor);
+  }
+
+  .shape-triangle { top: 8%; left: 12%; width: 80px; height: 80px; color: var(--sg-pink); animation: shapeFloat1 12s ease-in-out infinite; }
+  .shape-square { top: 55%; right: 8%; width: 70px; height: 70px; color: var(--sg-teal); animation: shapeFloat2 15s ease-in-out infinite; }
+  .shape-circle-shape { bottom: 12%; left: 20%; width: 90px; height: 90px; color: var(--sg-gold); animation: shapeFloat3 18s ease-in-out infinite; }
+  .shape-small-1 { top: 25%; right: 20%; width: 35px; height: 35px; color: var(--sg-pink); opacity: 0.08; animation: shapeFloat2 10s ease-in-out infinite; }
+  .shape-small-2 { bottom: 35%; left: 8%; width: 30px; height: 30px; color: var(--sg-teal); opacity: 0.08; animation: shapeFloat3 11s ease-in-out infinite; }
+  .shape-small-3 { top: 72%; right: 30%; width: 40px; height: 40px; color: var(--sg-gold); opacity: 0.06; animation: shapeFloat1 13s ease-in-out infinite; }
+
+  @keyframes shapeFloat1 {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-15px) rotate(5deg); }
+    50% { transform: translateY(-25px) rotate(0deg); }
+    75% { transform: translateY(-10px) rotate(-5deg); }
+  }
+  @keyframes shapeFloat2 {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    33% { transform: translateY(-20px) translateX(10px); }
+    66% { transform: translateY(-10px) translateX(-8px); }
+  }
+  @keyframes shapeFloat3 {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-18px) scale(1.05); }
+  }
+
+  /* ===== FLOATING PARTICLES ===== */
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+    animation: particleFloat linear infinite;
+  }
+
+  @keyframes particleFloat {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+  }
+
+  /* ===== HEADER ===== */
+  .header { text-align: center; margin-bottom: 36px; }
+
+  /* Logo with shapes cycling */
+  .logo-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 24px;
+  }
+
+  .logo-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 2px solid var(--sg-gold);
+    opacity: 0.3;
+    animation: logoGlowPulse 2s ease-in-out infinite;
+  }
+
+  .logo-shape {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+  }
+
+  .logo-shape svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 30px currentColor);
+  }
+
+  .logo-triangle { color: var(--sg-pink); animation: logoShapeShow 6s ease-in-out infinite; }
+  .logo-square { color: var(--sg-teal); animation: logoShapeShow 6s ease-in-out infinite; animation-delay: -2s; }
+  .logo-circle { color: var(--sg-gold); animation: logoShapeShow 6s ease-in-out infinite; animation-delay: -4s; }
+
+  @keyframes logoShapeShow {
+    0%, 28% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    32%, 61% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(120deg); }
+    65%, 94% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(240deg); }
+    98%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+  }
+
+  @keyframes logoGlowPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.15; }
+  }
+
+  .header h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #ccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .header p {
+    color: #666;
+    font-size: 14px;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ===== STATUS BAR ===== */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 8px 16px;
+    background: rgba(38, 166, 154, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(38, 166, 154, 0.2);
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sg-teal);
+    box-shadow: 0 0 8px var(--sg-teal-glow);
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .status-text {
+    font-size: 12px;
+    color: var(--sg-teal);
+    font-weight: 500;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ===== GRID ===== */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.03);
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .btn:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+
+  .btn-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover .btn-icon { transform: scale(1.1); }
+
+  .btn-label {
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-desc {
+    font-size: 10px;
+    color: #666;
+    margin-top: -4px;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Button Colors - Pink/Teal/Gold repeating */
+  .c1 .btn-icon { background: linear-gradient(135deg, var(--sg-pink), var(--sg-pink-dark)); box-shadow: 0 4px 15px var(--sg-pink-glow); }
+  .c2 .btn-icon { background: linear-gradient(135deg, var(--sg-teal), var(--sg-teal-dark)); box-shadow: 0 4px 15px var(--sg-teal-glow); }
+  .c3 .btn-icon { background: linear-gradient(135deg, var(--sg-gold), #FF9800); box-shadow: 0 4px 15px var(--sg-gold-glow); }
+  .c4 .btn-icon { background: linear-gradient(135deg, var(--sg-pink), var(--sg-pink-dark)); box-shadow: 0 4px 15px var(--sg-pink-glow); }
+  .c5 .btn-icon { background: linear-gradient(135deg, var(--sg-teal), var(--sg-teal-dark)); box-shadow: 0 4px 15px var(--sg-teal-glow); }
+  .c6 .btn-icon { background: linear-gradient(135deg, var(--sg-gold), #FF9800); box-shadow: 0 4px 15px var(--sg-gold-glow); }
+
+  .c1:hover { border-color: rgba(233, 30, 99, 0.3); box-shadow: 0 12px 40px rgba(233, 30, 99, 0.15); }
+  .c2:hover { border-color: rgba(38, 166, 154, 0.3); box-shadow: 0 12px 40px rgba(38, 166, 154, 0.15); }
+  .c3:hover { border-color: rgba(255, 215, 0, 0.3); box-shadow: 0 12px 40px rgba(255, 215, 0, 0.15); }
+  .c4:hover { border-color: rgba(233, 30, 99, 0.3); box-shadow: 0 12px 40px rgba(233, 30, 99, 0.15); }
+  .c5:hover { border-color: rgba(38, 166, 154, 0.3); box-shadow: 0 12px 40px rgba(38, 166, 154, 0.15); }
+  .c6:hover { border-color: rgba(255, 215, 0, 0.3); box-shadow: 0 12px 40px rgba(255, 215, 0, 0.15); }
+
+  /* Center last button when odd number */
+  .grid .btn:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 234px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    margin-top: 32px;
+    color: #555;
+    font-size: 11px;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Squid Game Shapes Background -->
+<div class="shapes-container">
+  <div class="squid-shape shape-triangle">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,10 10,90 90,90" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="squid-shape shape-square">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="15" y="15" width="70" height="70" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="squid-shape shape-circle-shape">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="40" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="squid-shape shape-small-1">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,10 10,90 90,90" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="squid-shape shape-small-2">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="15" y="15" width="70" height="70" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="squid-shape shape-small-3">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="40" fill="currentColor"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Floating Particles -->
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <div class="header">
+    <div class="logo-container">
+      <div class="logo-glow"></div>
+      <div class="logo-shape logo-triangle">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,15 15,85 85,85" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="logo-shape logo-square">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="20" width="60" height="60" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="logo-shape logo-circle">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="35" fill="currentColor"/>
+        </svg>
+      </div>
+    </div>
+    <h1>Squid Game Show</h1>
+    <p>Interactive Performance Control</p>
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      <span class="status-text">Server Online</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <a href="/admin/" target="_blank" class="btn c1">
+      <div class="btn-icon">&#128736;</div>
+      <span class="btn-label">Admin Panel</span>
+      <span class="btn-desc">Full Control</span>
+    </a>
+    <a href="/stage" target="_blank" class="btn c2">
+      <div class="btn-icon">&#127916;</div>
+      <span class="btn-label">Stage View</span>
+      <span class="btn-desc">Projector</span>
+    </a>
+    <a href="/edit-show/" target="_blank" class="btn c3">
+      <div class="btn-icon">&#9998;</div>
+      <span class="btn-label">Edit Show</span>
+      <span class="btn-desc">Scenes</span>
+    </a>
+    <a href="/client/" target="_blank" class="btn c4">
+      <div class="btn-icon">&#128241;</div>
+      <span class="btn-label">Voting</span>
+      <span class="btn-desc">Mobile</span>
+    </a>
+    <a href="/qr" target="_blank" class="btn c5">
+      <div class="btn-icon">&#9641;</div>
+      <span class="btn-label">QR Code</span>
+      <span class="btn-desc">Scan</span>
+    </a>
+    <a href="/qr-control" target="_blank" class="btn c5">
+      <div class="btn-icon">&#128241;</div>
+      <span class="btn-label">QR Control</span>
+      <span class="btn-desc">Mobile Access</span>
+    </a>
+    <a href="/public/" target="_blank" class="btn c6">
+      <div class="btn-icon">&#127760;</div>
+      <span class="btn-label">Website</span>
+      <span class="btn-desc">Public</span>
+    </a>
+  </div>
+
+  <div class="footer">Open Server.vbs to start &bull; Close Server.vbs to stop</div>
+</div>
+
+<script>
+function createParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  for (let i = 0; i < 15; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDuration = (15 + Math.random() * 25) + 's';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.width = (3 + Math.random() * 5) + 'px';
+    particle.style.height = particle.style.width;
+    container.appendChild(particle);
+  }
+}
+createParticles();
+</script>
+
+</body>
+</html>
