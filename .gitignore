@@ -4,3 +4,8 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+AI/
+screenshots/
+test-*.js
+TODO_NOTES.txt
+TOUCHDESIGNER_GUIDE.md
